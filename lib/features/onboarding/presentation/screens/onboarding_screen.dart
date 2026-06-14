@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -7,6 +8,7 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundWhite,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -14,18 +16,18 @@ class OnboardingScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
-              Icon(Icons.explore, size: 120, color: Theme.of(context).colorScheme.primary),
+              const Icon(Icons.explore, size: 120, color: AppColors.primary),
               const SizedBox(height: 32),
               const Text(
                 'Selamat Datang di Mobatech',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textDark),
               ),
               const SizedBox(height: 16),
               const Text(
                 'Temukan pengalaman bermain dan belajar yang luar biasa bersama kami. Mulai petualanganmu sekarang!',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(fontSize: 16, color: AppColors.textGrey),
               ),
               const Spacer(),
               SizedBox(
@@ -34,8 +36,8 @@ class OnboardingScreen extends StatelessWidget {
                   onPressed: () => context.go('/login'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.textWhite,
                   ),
                   child: const Text('Mulai', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ),
