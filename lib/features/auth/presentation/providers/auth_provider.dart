@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/auth_repository.dart';
 import '../../../../core/network/dio_client.dart';
@@ -23,6 +24,7 @@ class AuthNotifier extends StateNotifier<bool> {
       globalAuthToken = res['token'];
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('jwt_token', globalAuthToken!);
+      await prefs.setString('user_data', jsonEncode(res['user']));
     } finally {
       state = false;
     }
@@ -37,6 +39,18 @@ class AuthNotifier extends StateNotifier<bool> {
       globalAuthToken = loginRes['token'];
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('jwt_token', globalAuthToken!);
+      await prefs.setString('user_data', jsonEncode(loginRes['user']));
+    } finally {
+      state = false;
+    }
+  }
+
+  Future<void> updateProfile(String fullName, String phone, String? imagePath) async {
+    state = true;
+    try {
+      final res = await _repository.updateProfile(fullName, phone, imagePath);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_data', jsonEncode(res['user']));
     } finally {
       state = false;
     }

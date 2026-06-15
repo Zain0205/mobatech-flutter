@@ -6,6 +6,10 @@ import '../widgets/auth_label.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
+import '../../../profile/presentation/providers/profile_provider.dart';
+import '../../../appointment/providers/appointment_provider.dart';
+import '../../../services/presentation/providers/service_provider.dart';
+import '../../../chatbot/presentation/providers/chat_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +21,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _obscurePassword = true;
   bool _rememberMe = false;
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -96,7 +101,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
-                child: Column(
+                child: Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
@@ -122,6 +130,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     AuthTextField(
                       hint: 'example@gmail.com',
                       controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return 'Email wajib diisi';
+                        if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) return 'Format email tidak valid';
+                        return null;
+                      },
                       onChanged: (v) => setState(() {}),
                     ),
                     const SizedBox(height: 20),
@@ -133,6 +147,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       isPassword: true,
                       obscureText: _obscurePassword,
                       controller: _passwordController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return 'Password wajib diisi';
+                        if (value.length < 8) return 'Password minimal 8 karakter';
+                        return null;
+                      },
                       onChanged: (v) => setState(() {}),
                       onTogglePassword: () {
                         setState(() {
@@ -191,11 +210,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       height: 52,
                       child: ElevatedButton(
                         onPressed: (isButtonEnabled && !ref.watch(authStateProvider)) ? () async {
+                          if (!_formKey.currentState!.validate()) return;
                           try {
                             await ref.read(authStateProvider.notifier).login(
                               _emailController.text,
                               _passwordController.text,
                             );
+                            ref.invalidate(userProfileProvider);
+                            ref.invalidate(userAppointmentsProvider);
+                            ref.invalidate(servicesProvider);
+                            ref.invalidate(chatSessionsProvider);
                             if (context.mounted) {
                               context.go('/home');
                             }
@@ -246,6 +270,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     const SizedBox(height: 16),
                   ],
                 ),
+              ),
               ),
             ),
           ),

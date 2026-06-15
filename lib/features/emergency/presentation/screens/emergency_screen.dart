@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -10,6 +11,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/skeleton_loader.dart';
 import '../providers/emergency_provider.dart';
 
 enum EmergencyState { form, dispatching, tracking, arrived }
@@ -353,6 +355,25 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen>
           ),
           centerTitle: true,
           elevation: 0,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+          ),
+          flexibleSpace: ClipRRect(
+            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                  right: -20,
+                  top: -20,
+                  child: Opacity(
+                    opacity: 0.4,
+                    child: Image.asset('assets/header_logo.png', width: 220),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         SliverToBoxAdapter(
           child: Form(
@@ -364,34 +385,35 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen>
                 children: [
                   // Warning banner
                   Container(
-                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          AppColors.errorRed.withAlpha(25),
-                          AppColors.errorRed.withAlpha(10),
-                        ],
-                      ),
+                      color: AppColors.errorRed.withOpacity(0.05),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                          color: AppColors.errorRed.withAlpha(80)),
+                      border: Border.all(color: AppColors.errorRed.withOpacity(0.2)),
                     ),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.warning_amber_rounded,
-                            color: AppColors.errorRed, size: 32),
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'Gunakan layanan ini HANYA untuk kondisi gawat darurat yang mengancam nyawa.',
-                            style: TextStyle(
-                              color: AppColors.errorRed,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                        child: const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Icon(Icons.warning_amber_rounded, color: AppColors.errorRed, size: 32),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Gunakan layanan ini HANYA untuk kondisi gawat darurat yang mengancam nyawa.',
+                                  style: TextStyle(
+                                    color: AppColors.errorRed,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
 
@@ -613,21 +635,10 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen>
     if (_isLocating) {
       return Container(
         color: AppColors.backgroundLightGrey,
-        child: const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(
-                color: AppColors.primary,
-                strokeWidth: 2.5,
-              ),
-              SizedBox(height: 12),
-              Text(
-                'Mendeteksi lokasi GPS...',
-                style: TextStyle(color: AppColors.textGrey, fontSize: 13),
-              ),
-            ],
-          ),
+        child: const SkeletonLoader(
+          width: double.infinity,
+          height: double.infinity,
+          borderRadius: 0,
         ),
       );
     }

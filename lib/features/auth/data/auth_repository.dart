@@ -34,4 +34,26 @@ class AuthRepository {
       throw Exception(errorMsg ?? 'Register failed');
     }
   }
+
+  Future<Map<String, dynamic>> updateProfile(String fullName, String phone, String? imagePath) async {
+    try {
+      FormData formData = FormData.fromMap({
+        'full_name': fullName,
+        'phone_number': phone,
+      });
+
+      if (imagePath != null && !imagePath.startsWith('http')) {
+        formData.files.add(
+          MapEntry('image', await MultipartFile.fromFile(imagePath)),
+        );
+      }
+
+      final response = await _dio.put('/users/profile', data: formData);
+      return response.data;
+    } on DioException catch (e) {
+      final data = e.response?.data;
+      final errorMsg = data is Map ? data['error'] : e.message;
+      throw Exception(errorMsg ?? 'Failed to update profile');
+    }
+  }
 }

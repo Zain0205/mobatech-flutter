@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'suggestion_chip.dart';
@@ -79,31 +80,37 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
           Row(
             children: [
               Expanded(
-                child: Container(
-                  height: 48,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: AppColors.backgroundWhite,
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: AppColors.borderGrey),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _controller,
-                          onSubmitted: (_) => _sendMessage(),
-                          decoration: const InputDecoration(
-                            hintText: 'Tulis Pertanyaan Kamu Disini ...',
-                            hintStyle: TextStyle(fontSize: 13, color: AppColors.textGrey),
-                            border: InputBorder.none,
-                          ),
-                        ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child: Container(
+                      height: 48,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundWhite.withOpacity(0.85),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: AppColors.borderGrey.withOpacity(0.5)),
                       ),
-                      const Icon(Icons.attach_file, color: AppColors.textGrey, size: 20),
-                      const SizedBox(width: 12),
-                      const Icon(Icons.camera_alt_outlined, color: AppColors.textGrey, size: 20),
-                    ],
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _controller,
+                              onSubmitted: (_) => _sendMessage(),
+                              decoration: const InputDecoration(
+                                hintText: 'Tulis Pertanyaan Kamu Disini ...',
+                                hintStyle: TextStyle(fontSize: 13, color: AppColors.textGrey),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                          const Icon(Icons.attach_file, color: AppColors.textGrey, size: 20),
+                          const SizedBox(width: 12),
+                          const Icon(Icons.camera_alt_outlined, color: AppColors.textGrey, size: 20),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),

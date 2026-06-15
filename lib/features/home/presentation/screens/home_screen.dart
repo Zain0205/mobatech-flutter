@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -8,7 +10,11 @@ import '../widgets/assistant_card.dart';
 import '../widgets/hospital_card.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/widgets/skeleton_loader.dart';
 import '../../../services/presentation/providers/service_provider.dart';
+import '../../../appointment/providers/appointment_provider.dart';
+import '../../../profile/presentation/providers/profile_provider.dart';
+import 'search_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -21,16 +27,16 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context),
-            const SizedBox(height: 32),
-            _buildMainMenu(context, ref),
-            const SizedBox(height: 32),
-            _buildSectionTitle('Agenda Terdaftar'),
-            const AgendaCard(),
+            _buildHeader(context, ref),
             const SizedBox(height: 24),
+            _buildMainMenu(context, ref),
+            const SizedBox(height: 20),
+            _buildSectionTitle('Agenda Terdaftar'),
+            _buildAgendaList(ref),
+            const SizedBox(height: 20),
             _buildSectionTitle('Hermina Asisten Kesehatan Digital'),
             const AssistantCard(),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             _buildSectionTitle('RS Hermina terdekat dari rumah kamu'),
             const HospitalCard(
               name: 'Hermina Ciledug',
@@ -42,7 +48,7 @@ class HomeScreen extends ConsumerWidget {
               address: 'Jl. Raya Jakarta-Bogor Km 46...',
               distance: '6 KM',
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
           ],
         ),
       ),
@@ -50,102 +56,116 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          width: double.infinity,
-          height: 230,
-          decoration: const BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
+  Widget _buildHeader(BuildContext context, WidgetRef ref) {
+    final userProfile = ref.watch(userProfileProvider).value;
+    final firstName = userProfile?.fullName.split(' ').first ?? 'Pengguna';
+
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
+        ),
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            right: -20,
+            top: -20,
+            child: Opacity(
+              opacity: 0.4,
+              child: Image.asset('assets/header_logo.png', width: 220),
             ),
           ),
-          child: Stack(
-            children: [
-              Positioned(
-                right: -20,
-                top: 0,
-                child: Opacity(
-                  opacity: 0.4,
-                  child: Image.asset('assets/header_logo.png', width: 220),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 70, 24, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
+              child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Selamat Pagi, Bang Rico',
-                                style: TextStyle(
-                                  color: AppColors.textWhite,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 6),
-                              Text(
-                                'Semoga harimu menyenangkan, salam sehat',
-                                style: TextStyle(
-                                  color: AppColors.textWhite,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
+                    CircleAvatar(
+                      radius: 24,
+                      backgroundColor: Colors.white.withOpacity(0.2),
+                      backgroundImage: userProfile?.imagePath != null ? (userProfile!.imagePath!.startsWith('http') ? NetworkImage(userProfile.imagePath!) as ImageProvider : FileImage(File(userProfile.imagePath!))) : null,
+                      child: userProfile?.imagePath == null ? const Icon(Icons.person, color: AppColors.textWhite, size: 28) : null,
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Selamat Pagi, $firstName',
+                            style: const TextStyle(
+                              color: AppColors.textWhite,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 4),
+                          const Text(
+                            'Semoga harimu menyenangkan, salam sehat',
+                            style: TextStyle(
+                              color: AppColors.textWhite,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          bottom: -25,
-          left: 24,
-          right: 24,
-          child: Container(
-            height: 54,
-            decoration: BoxDecoration(
-              color: AppColors.backgroundWhite,
-              borderRadius: BorderRadius.circular(27),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.shadowColor,
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                          child: Container(
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: TextField(
+                              onSubmitted: (value) {
+                                if (value.trim().isNotEmpty) {
+                                  ref.read(globalSearchQueryProvider.notifier).state = value;
+                                  context.push('/search');
+                                }
+                              },
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                hintText: 'Cari layanan atau spesialis...',
+                                hintStyle: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 13,
+                                ),
+                                prefixIcon: Icon(Icons.search, color: Colors.white, size: 20),
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(vertical: 14),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            child: const TextField(
-              decoration: InputDecoration(
-                hintText: 'Cari dokter atau Informasi',
-                hintStyle: TextStyle(
-                  color: AppColors.textLightGrey,
-                  fontSize: 14,
-                ),
-                prefixIcon: Icon(Icons.search, color: AppColors.textLightGrey),
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(vertical: 16),
-              ),
-            ),
           ),
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -225,26 +245,27 @@ class HomeScreen extends ConsumerWidget {
             ),
           );
 
-          return _buildGrid(displayedItems);
+          return _buildGrid(context, displayedItems);
         } else {
-          return _buildGrid(menuItems);
+          return _buildGrid(context, menuItems);
         }
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const GridSkeletonLoader(count: 8),
       error: (err, stack) => Center(child: Text('Error: $err')),
     );
   }
 
-  Widget _buildGrid(List<Widget> items) {
+  Widget _buildGrid(BuildContext context, List<Widget> items) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: GridView.count(
+        padding: EdgeInsets.zero,
         crossAxisCount: 4,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        mainAxisSpacing: 16,
+        mainAxisSpacing: 12,
         crossAxisSpacing: 8,
-        childAspectRatio: 0.75,
+        childAspectRatio: MediaQuery.of(context).size.width / 4 / 115,
         children: items,
       ),
     );
@@ -272,15 +293,50 @@ class HomeScreen extends ConsumerWidget {
                 crossAxisCount: 4,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 16,
+                mainAxisSpacing: 12,
                 crossAxisSpacing: 8,
-                childAspectRatio: 0.75,
+                childAspectRatio: MediaQuery.of(context).size.width / 4 / 115,
                 children: items,
               ),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildAgendaList(WidgetRef ref) {
+    final appointmentsAsync = ref.watch(userAppointmentsProvider);
+    
+    return appointmentsAsync.when(
+      data: (appointments) {
+        if (appointments.isEmpty) {
+          return const Padding(
+            padding: EdgeInsets.all(24.0),
+            child: Center(
+              child: Text(
+                'Belum ada agenda terdaftar',
+                style: TextStyle(color: AppColors.textGrey),
+              ),
+            ),
+          );
+        }
+        
+        return ListView.builder(
+          padding: EdgeInsets.zero,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: appointments.length > 2 ? 2 : appointments.length, // Show max 2 on home
+          itemBuilder: (context, index) {
+            return AgendaCard(appointment: appointments[index]);
+          },
+        );
+      },
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: CardSkeletonLoader(count: 1),
+      ),
+      error: (err, stack) => Center(child: Text('Error: $err')),
     );
   }
 

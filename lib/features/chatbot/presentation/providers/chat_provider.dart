@@ -45,6 +45,19 @@ class ChatMessagesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     }
   }
 
+  Future<void> deleteSession(int sessionId) async {
+    try {
+      await _repository.dio.delete('/chat/sessions/$sessionId');
+      if (_ref.read(currentSessionIdProvider) == sessionId) {
+        _ref.read(currentSessionIdProvider.notifier).state = null;
+        state = [];
+      }
+      _ref.invalidate(chatSessionsProvider);
+    } catch (e) {
+      // Ignored for now
+    }
+  }
+
   Future<void> createNewSessionAndSend(String title, String message) async {
     final session = await _repository.createSession(title);
     final sessionId = session['ID'];
@@ -79,8 +92,17 @@ class ChatMessagesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
 
       await for (final line in stringStream) {
         if (line.startsWith('data:')) {
-          final chunk = line.substring(5);
-          _appendChunkToLastMessage(chunk);
+          final dataStr = line.substring(5).trim();
+          if (dataStr.isEmpty) continue;
+          try {
+            final parsed = jsonDecode(dataStr);
+            if (parsed['text'] != null) {
+              _appendChunkToLastMessage(parsed['text']);
+            }
+          } catch (e) {
+            // Fallback just in case
+            _appendChunkToLastMessage(dataStr);
+          }
         } else if (line.startsWith('event: error')) {
           // Handle SSE error event here
         }

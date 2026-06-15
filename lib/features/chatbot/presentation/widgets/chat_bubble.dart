@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/skeleton_loader.dart';
 
 class ChatBubble extends StatelessWidget {
   final String text;
@@ -53,28 +54,36 @@ class ChatBubble extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (isLoading)
-                  Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(height: 14, width: 200, color: Colors.white, margin: const EdgeInsets.only(bottom: 8)),
-                        Container(height: 14, width: 150, color: Colors.white, margin: const EdgeInsets.only(bottom: 8)),
-                        Container(height: 14, width: 180, color: Colors.white),
-                      ],
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SkeletonLoader(height: 14, width: 200, margin: const EdgeInsets.only(bottom: 8)),
+                      SkeletonLoader(height: 14, width: 150, margin: const EdgeInsets.only(bottom: 8)),
+                      SkeletonLoader(height: 14, width: 180),
+                    ],
                   )
                 else
-                  Text(
-                    text,
-                    style: TextStyle(
-                      fontSize: 14, 
-                      color: isUser ? AppColors.textWhite : AppColors.textDark, 
-                      height: 1.4, 
-                      fontWeight: isUser ? FontWeight.normal : FontWeight.w500
-                    ),
-                  ),
+                  isUser 
+                    ? Text(
+                        text,
+                        style: TextStyle(
+                          fontSize: 14, 
+                          color: AppColors.textWhite, 
+                          height: 1.4, 
+                          fontWeight: FontWeight.normal
+                        ),
+                      )
+                    : MarkdownBody(
+                        data: text,
+                        styleSheet: MarkdownStyleSheet(
+                          p: TextStyle(fontSize: 14, color: AppColors.textDark, height: 1.4, fontWeight: FontWeight.w500),
+                          pPadding: const EdgeInsets.only(bottom: 8),
+                          listBullet: TextStyle(color: AppColors.textDark),
+                          listBulletPadding: const EdgeInsets.only(right: 8),
+                          strong: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold),
+                          blockSpacing: 12.0,
+                        ),
+                      ),
                 const SizedBox(height: 8),
                 Align(
                   alignment: Alignment.bottomRight,

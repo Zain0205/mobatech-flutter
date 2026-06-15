@@ -7,6 +7,7 @@ import '../widgets/phone_text_field.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
+import '../../../profile/presentation/providers/profile_provider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -18,6 +19,7 @@ class RegisterScreen extends ConsumerStatefulWidget {
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -56,17 +58,35 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-              child: Column(
+              child: Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const AuthLabel(text: 'Full Name '),
                   const SizedBox(height: 8),
-                  AuthTextField(hint: 'Enter full name', controller: _nameController, onChanged: (v) => setState(() {})),
+                  AuthTextField(
+                    hint: 'Enter full name', 
+                    controller: _nameController, 
+                    validator: (v) => (v == null || v.isEmpty) ? 'Nama lengkap wajib diisi' : null,
+                    onChanged: (v) => setState(() {})
+                  ),
                   const SizedBox(height: 20),
                   
                   const AuthLabel(text: 'Email '),
                   const SizedBox(height: 8),
-                  AuthTextField(hint: 'example@gmail.com', controller: _emailController, onChanged: (v) => setState(() {})),
+                  AuthTextField(
+                    hint: 'example@gmail.com', 
+                    controller: _emailController, 
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (v) {
+                      if (v == null || v.isEmpty) return 'Email wajib diisi';
+                      if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(v)) return 'Format email tidak valid';
+                      return null;
+                    },
+                    onChanged: (v) => setState(() {})
+                  ),
                   const SizedBox(height: 20),
                   
                   const AuthLabel(text: 'Phone Number '),
@@ -81,6 +101,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     isPassword: true,
                     controller: _passwordController,
                     obscureText: _obscurePassword,
+                    validator: (v) {
+                      if (v == null || v.isEmpty) return 'Password wajib diisi';
+                      if (v.length < 8) return 'Minimal 8 karakter';
+                      if (!RegExp(r"(?=.*[a-z])").hasMatch(v)) return 'Harus mengandung huruf kecil';
+                      if (!RegExp(r"(?=.*[A-Z])").hasMatch(v)) return 'Harus mengandung huruf besar';
+                      if (!RegExp(r"(?=.*\d)").hasMatch(v)) return 'Harus mengandung angka';
+                      return null;
+                    },
                     onChanged: (v) => setState(() {}),
                     onTogglePassword: () {
                       setState(() {
@@ -111,6 +139,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               ),
             ),
           ),
+        ),
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: SizedBox(
@@ -118,6 +147,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               height: 52,
               child: ElevatedButton(
                 onPressed: ref.watch(authStateProvider) ? null : () async {
+                  if (!_formKey.currentState!.validate()) return;
+                  if (_phoneController.text.length < 8) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Nomor telepon tidak valid')));
+                    return;
+                  }
                   if (_passwordController.text != _confirmPasswordController.text) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Passwords do not match')));
                     return;
@@ -129,6 +163,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       '+62${_phoneController.text}',
                       _passwordController.text,
                     );
+                    ref.invalidate(userProfileProvider);
                     if (context.mounted) {
                       context.go('/home');
                     }

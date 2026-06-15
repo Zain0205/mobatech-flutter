@@ -1,8 +1,10 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_bottom_nav_bar.dart';
 import '../widgets/chat_bubble.dart';
 import '../widgets/chat_input_area.dart';
+import '../../../../core/widgets/skeleton_loader.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/chat_provider.dart';
@@ -150,53 +152,102 @@ class ChatbotScreen extends ConsumerWidget {
   void _showHistoryModal(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) {
         return Consumer(
           builder: (context, ref, _) {
             final sessionsAsync = ref.watch(chatSessionsProvider);
             
-            return Container(
-              padding: const EdgeInsets.all(16),
-              height: 400,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Chat History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
-                    ],
-                  ),
-                  const Divider(),
-                  Expanded(
-                    child: sessionsAsync.when(
-                      data: (sessions) {
-                        if (sessions.isEmpty) {
-                          return const Center(child: Text('No history yet.'));
-                        }
-                        return ListView.builder(
-                          itemCount: sessions.length,
-                          itemBuilder: (context, index) {
-                            final session = sessions[index];
-                            return ListTile(
-                              leading: const Icon(Icons.chat_bubble_outline),
-                              title: Text(session['title'] ?? 'New Chat'),
-                              subtitle: Text('ID: ${session['ID']}'),
-                              onTap: () {
-                                ref.read(chatMessagesProvider.notifier).loadSession(session['ID']);
-                                Navigator.pop(context);
-                              },
-                            );
-                          },
-                        );
-                      },
-                      loading: () => const Center(child: CircularProgressIndicator()),
-                      error: (err, stack) => Center(child: Text('Error: $err')),
+            return BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                height: MediaQuery.of(context).size.height * 0.6,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.85),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, -5))
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Riwayat Obrolan', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+                      ],
                     ),
-                  ),
-                ],
+                    const Divider(),
+                    Expanded(
+                      child: sessionsAsync.when(
+                        data: (sessions) {
+                          if (sessions.isEmpty) {
+                            return const Center(child: Text('Belum ada riwayat.', style: TextStyle(color: AppColors.textGrey)));
+                          }
+                          return ListView.builder(
+                            itemCount: sessions.length,
+                            itemBuilder: (context, index) {
+                              final session = sessions[index];
+                              return Card(
+                                elevation: 0,
+                                color: Colors.transparent,
+                                margin: const EdgeInsets.only(bottom: 8),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: BorderSide(color: Colors.grey.withOpacity(0.2)),
+                                ),
+                                child: Material(
+                                  color: Colors.white.withOpacity(0.5),
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: InkWell(
+                                    onTap: () {
+                                      ref.read(chatMessagesProvider.notifier).loadSession(session['ID']);
+                                      Navigator.pop(context);
+                                    },
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: ListTile(
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                      leading: const CircleAvatar(
+                                        backgroundColor: AppColors.primaryLight,
+                                        child: Icon(Icons.chat_bubble_outline, color: AppColors.primary, size: 20),
+                                      ),
+                                      title: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              session['title'] ?? 'Percakapan Baru',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                                            constraints: const BoxConstraints(),
+                                            padding: EdgeInsets.zero,
+                                            onPressed: () {
+                                              ref.read(chatMessagesProvider.notifier).deleteSession(session['ID']);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        loading: () => const CardSkeletonLoader(count: 3),
+                        error: (err, stack) => Center(child: Text('Error: $err')),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },
