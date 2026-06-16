@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 class Formatters {
   static String formatPhoneNumber(String phone) {
     // Clean all non-digit characters except the leading plus
@@ -31,5 +33,32 @@ class Formatters {
       }
     }
     return cleanPhone; // Fallback
+  }
+}
+
+class PhonePrefixFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+    
+    // First strip all non-digits except +
+    text = text.replaceAll(RegExp(r'[^\d+]'), '');
+
+    // If it starts with +62, 62, or 0, strip it! We only want the local part (e.g. 818...)
+    if (text.startsWith('+62')) {
+      text = text.substring(3);
+    } else if (text.startsWith('62')) {
+      text = text.substring(2);
+    } else if (text.startsWith('0')) {
+      text = text.substring(1);
+    }
+
+    // After removing the prefix, if there are still non-digits, remove them
+    text = text.replaceAll(RegExp(r'\D'), '');
+
+    return newValue.copyWith(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/error_handler.dart';
 import '../../../../core/widgets/custom_bottom_nav_bar.dart';
 import '../widgets/quick_access_item.dart';
 import '../widgets/agenda_card.dart';
@@ -23,33 +24,53 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: AppColors.backgroundScreen,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(context, ref),
-            const SizedBox(height: 24),
-            _buildMainMenu(context, ref),
-            const SizedBox(height: 20),
-            _buildSectionTitle('Agenda Terdaftar'),
-            _buildAgendaList(ref),
-            const SizedBox(height: 20),
-            _buildSectionTitle('Hermina Asisten Kesehatan Digital'),
-            const AssistantCard(),
-            const SizedBox(height: 20),
-            _buildSectionTitle('RS Hermina terdekat dari rumah kamu'),
-            const HospitalCard(
-              name: 'Hermina Ciledug',
-              address: 'Jl. Cipto Mangunkusumo No 12 Kab...',
-              distance: '6 KM',
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeOutCubic,
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: value,
+                child: Transform.translate(
+                  offset: Offset(0, 30 * (1 - value)),
+                  child: child,
+                ),
+              );
+            },
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(context, ref),
+                  const SizedBox(height: 24),
+                  _buildMainMenu(context, ref),
+                  const SizedBox(height: 20),
+                  _buildSectionTitle('Agenda Terdaftar'),
+                  _buildAgendaList(ref),
+                  const SizedBox(height: 20),
+                  _buildSectionTitle('Hermina Asisten Kesehatan Digital'),
+                  const AssistantCard(),
+                  const SizedBox(height: 20),
+                  _buildSectionTitle('RS Hermina terdekat dari rumah kamu'),
+                  const HospitalCard(
+                    name: 'Hermina Ciledug',
+                    address: 'Jl. Cipto Mangunkusumo No 12 Kab...',
+                    distance: '6 KM',
+                  ),
+                  const HospitalCard(
+                    name: 'Hermina Cibinong',
+                    address: 'Jl. Raya Jakarta-Bogor Km 46...',
+                    distance: '6 KM',
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
-            const HospitalCard(
-              name: 'Hermina Cibinong',
-              address: 'Jl. Raya Jakarta-Bogor Km 46...',
-              distance: '6 KM',
-            ),
-            const SizedBox(height: 24),
-          ],
+          ),
         ),
       ),
       bottomNavigationBar: const CustomBottomNavBar(currentIndex: 0),
@@ -251,7 +272,7 @@ class HomeScreen extends ConsumerWidget {
         }
       },
       loading: () => const GridSkeletonLoader(count: 8),
-      error: (err, stack) => Center(child: Text('Error: $err')),
+      error: (err, stack) => Center(child: Text(ErrorHandler.getMessage(err))),
     );
   }
 
@@ -336,7 +357,7 @@ class HomeScreen extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: CardSkeletonLoader(count: 1),
       ),
-      error: (err, stack) => Center(child: Text('Error: $err')),
+      error: (err, stack) => Center(child: Text(ErrorHandler.getMessage(err))),
     );
   }
 

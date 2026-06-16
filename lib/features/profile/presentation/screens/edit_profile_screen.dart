@@ -8,6 +8,9 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/formatters.dart';
+import '../../../../core/utils/error_handler.dart';
+import '../../../../core/utils/validators.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/profile_provider.dart';
 
@@ -19,9 +22,11 @@ class EditProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
+  String? _selectedGender;
   final _formKey = GlobalKey<FormState>();
   
   String? _imagePath;
@@ -37,16 +42,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final userAsync = ref.read(userProfileProvider);
     userAsync.whenData((user) {
       if (user != null) {
-        _nameController.text = user.fullName;
+        _fullNameController.text = user.fullName;
         _emailController.text = user.email;
         
-        String phoneStr = user.phone;
-        if (phoneStr.startsWith('+62')) phoneStr = phoneStr.substring(3);
-        if (phoneStr.startsWith('62')) phoneStr = phoneStr.substring(2);
-        if (phoneStr.startsWith('0')) phoneStr = phoneStr.substring(1);
-        _phoneController.text = phoneStr;
-        
+        String p = user.phone;
+        if (p.startsWith('+62')) p = p.substring(3);
+        else if (p.startsWith('62')) p = p.substring(2);
+        else if (p.startsWith('0')) p = p.substring(1);
+        _phoneController.text = p;
+
+        _dobController.text = user.dob ?? '';
         setState(() {
+          _selectedGender = user.gender;
           _imagePath = user.imagePath;
         });
       }
@@ -65,46 +72,40 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) return;
-    if (_phoneController.text.length < 8) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Nomor telepon tidak valid')));
-      return;
-    }
     setState(() => _isLoading = true);
 
     try {
       final userAsync = ref.read(userProfileProvider);
-      final currentId = userAsync.value?.id ?? 1;
+      final user = userAsync.value;
 
-      // Backend expects the image file to be uploaded. If it's a URL, don't upload.
       String? pathForUpload = _imagePath;
       if (pathForUpload != null && pathForUpload.startsWith('http')) {
         pathForUpload = null;
       }
 
       await ref.read(authStateProvider.notifier).updateProfile(
-        _nameController.text.trim(),
+        _fullNameController.text.trim(),
         '+62${_phoneController.text.trim()}',
         pathForUpload,
+        bloodType: user?.bloodType,
+        height: user?.height,
+        weight: user?.weight,
+        allergies: user?.allergies,
+        dob: _dobController.text.trim(),
+        gender: _selectedGender,
       );
 
       ref.invalidate(userProfileProvider);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Profil berhasil diperbarui!'),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            backgroundColor: Colors.green,
-          ),
-        );
-        context.pop();
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).hideCurrentSnackBar(); ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Row(children: [Icon(Icons.check_circle, color: Colors.white), SizedBox(width: 8), Text('Profil berhasil diperbarui!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))]), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating));
+        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString().replaceAll('Exception: ', ''))),
-        );
+        ScaffoldMessenger.of(context).hideCurrentSnackBar(); 
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(ErrorHandler.getMessage(e), style: const TextStyle(color: Colors.white)), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating));
       }
     } finally {
       setState(() => _isLoading = false);
@@ -153,13 +154,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             ),
           );
         },
-        child: Form(
-          key: _formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: ListView(
-            padding: const EdgeInsets.all(24),
-            physics: const BouncingScrollPhysics(),
-            children: [
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Form(
+              key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: ListView(
+                padding: const EdgeInsets.all(24),
+                physics: const BouncingScrollPhysics(),
+                children: [
             Center(
               child: Stack(
                 children: [
@@ -203,12 +207,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             const SizedBox(height: 32),
             _buildGlassTextField(
               'Nama Lengkap', 
-              _nameController, 
+              _fullNameController, 
               Icons.person_outline,
-              validator: (v) => (v == null || v.isEmpty) ? 'Nama wajib diisi' : null,
+              validator: (v) => Validators.validateRequired(v, 'Nama lengkap'),
             ),
             const SizedBox(height: 16),
-            _buildGlassTextField('Email', _emailController, Icons.email_outlined, keyboardType: TextInputType.emailAddress, readOnly: true),
+            _buildGlassTextField('Email', _emailController, Icons.email_outlined, readOnly: true),
             const SizedBox(height: 16),
             _buildGlassTextField(
               'Nomor Telepon', 
@@ -217,9 +221,44 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               keyboardType: TextInputType.phone,
               prefixText: '+62 ',
               formatters: [
-                FilteringTextInputFormatter.digitsOnly,
+                PhonePrefixFormatter(),
               ],
             ),
+            const SizedBox(height: 16),
+            _buildGlassTextField(
+              'Tanggal Lahir (YYYY-MM-DD)', 
+              _dobController, 
+              Icons.cake_outlined, 
+              keyboardType: TextInputType.datetime,
+              readOnly: true,
+              onTap: () async {
+                final date = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now().subtract(const Duration(days: 365 * 20)),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
+                  builder: (context, child) {
+                    return Theme(
+                      data: Theme.of(context).copyWith(
+                        colorScheme: const ColorScheme.light(
+                          primary: AppColors.primary,
+                          onPrimary: Colors.white,
+                          onSurface: AppColors.textDark,
+                        ),
+                      ),
+                      child: child!,
+                    );
+                  },
+                );
+                if (date != null) {
+                  setState(() {
+                    _dobController.text = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                  });
+                }
+              },
+            ),
+            const SizedBox(height: 16),
+            _buildGenderSelection(),
             const SizedBox(height: 48),
             SizedBox(
               width: double.infinity,
@@ -242,16 +281,27 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         ),
       ),
       ),
+      ),
+     ),
     );
   }
 
-  Widget _buildGlassTextField(String label, TextEditingController controller, IconData icon, {TextInputType? keyboardType, bool readOnly = false, String? prefixText, List<TextInputFormatter>? formatters, String? Function(String?)? validator}) {
+  Widget _buildGlassTextField(
+    String label, 
+    TextEditingController controller, 
+    IconData icon, {
+    TextInputType keyboardType = TextInputType.text,
+    bool readOnly = false,
+    String? prefixText,
+    List<TextInputFormatter>? formatters,
+    String? Function(String?)? validator,
+    VoidCallback? onTap,
+  }) {
     return Container(
       decoration: BoxDecoration(
-        color: readOnly ? Colors.white.withOpacity(0.4) : Colors.white.withOpacity(0.85),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.5)),
-        boxShadow: readOnly ? [] : [
+        color: readOnly ? Colors.white.withOpacity(0.4) : Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
           BoxShadow(color: AppColors.shadowColor.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
         ],
       ),
@@ -265,6 +315,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             readOnly: readOnly,
             inputFormatters: formatters,
             validator: validator,
+            onTap: onTap,
             onChanged: (val) {
               if (label == 'Nomor Telepon') {
                 if (val.startsWith('62')) {
@@ -280,13 +331,71 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             decoration: InputDecoration(
               labelText: label,
               labelStyle: const TextStyle(color: AppColors.textGrey, fontSize: 14),
-              prefixIcon: Icon(icon, color: readOnly ? AppColors.textLightGrey : AppColors.primary),
+              prefixIcon: Icon(icon, color: AppColors.textGrey),
               prefixText: prefixText,
-              prefixStyle: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.textDark, fontSize: 16),
+              prefixStyle: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 14),
               border: InputBorder.none,
+              hintText: 'Masukkan ${label.toLowerCase()}',
+              hintStyle: TextStyle(color: AppColors.textGrey.withOpacity(0.5), fontSize: 13, fontWeight: FontWeight.normal),
               contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGenderSelection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 4, bottom: 8),
+          child: Text('Jenis Kelamin', style: TextStyle(color: AppColors.textGrey, fontSize: 13, fontWeight: FontWeight.w600)),
+        ),
+        Row(
+          children: [
+            Expanded(child: _buildGenderCard('Laki-laki', Icons.male)),
+            const SizedBox(width: 16),
+            Expanded(child: _buildGenderCard('Perempuan', Icons.female)),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGenderCard(String gender, IconData icon) {
+    final isSelected = _selectedGender == gender;
+    return GestureDetector(
+      onTap: () => setState(() => _selectedGender = gender),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary : Colors.white.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : Colors.grey.withOpacity(0.2),
+            width: 1.5,
+          ),
+          boxShadow: isSelected
+              ? [BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 4))]
+              : [BoxShadow(color: AppColors.primary.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: isSelected ? Colors.white : AppColors.textGrey, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              gender,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                color: isSelected ? Colors.white : AppColors.textDark,
+              ),
+            ),
+          ],
         ),
       ),
     );

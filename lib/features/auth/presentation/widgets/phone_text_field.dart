@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/formatters.dart';
 
 class PhoneTextField extends StatelessWidget {
   final TextEditingController? controller;
@@ -34,6 +36,9 @@ class PhoneTextField extends StatelessWidget {
             child: TextField(
               controller: controller,
               keyboardType: TextInputType.phone,
+              inputFormatters: [
+                PhonePrefixFormatter(),
+              ],
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),

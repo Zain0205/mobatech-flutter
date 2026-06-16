@@ -19,7 +19,6 @@ class AgendaCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.85),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withOpacity(0.2)),
           boxShadow: [
             BoxShadow(
               color: AppColors.shadowColor.withOpacity(0.05),

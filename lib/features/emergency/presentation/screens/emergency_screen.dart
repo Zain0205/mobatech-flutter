@@ -11,6 +11,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/error_handler.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../providers/emergency_provider.dart';
 
@@ -161,7 +162,7 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen>
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_userLat == null || _userLng == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).hideCurrentSnackBar(); ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Lokasi belum terdeteksi. Tunggu atau coba lagi.'),
           backgroundColor: AppColors.errorRed,
@@ -189,12 +190,9 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen>
       _connectWebSocket(emergencyId.toString());
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: AppColors.errorRed,
-          ),
-        );
+        ScaffoldMessenger.of(context).hideCurrentSnackBar(); 
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(ErrorHandler.getMessage(e), style: const TextStyle(color: Colors.white)), backgroundColor: AppColors.errorRed, behavior: SnackBarBehavior.floating));
+
         setState(() {
           _isLoading = false;
           _currentState = EmergencyState.form;
@@ -342,7 +340,10 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen>
   // ═══════════════════════════════════════════════════════════════════════
 
   Widget _buildFormState() {
-    return CustomScrollView(
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: CustomScrollView(
       key: const ValueKey('form'),
       slivers: [
         SliverAppBar(
@@ -511,8 +512,10 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen>
           ),
         ),
       ],
-    );
-  }
+    ),
+   ),
+  );
+}
 
   Widget _buildSectionLabel(String text, IconData icon) {
     return Row(
@@ -535,17 +538,22 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen>
   Widget _buildLocationCard() {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(13),
+            color: AppColors.shadowColor.withOpacity(0.05),
             blurRadius: 10,
-            offset: const Offset(0, 2),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Column(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            color: Colors.white.withOpacity(0.85),
+            child: Column(
         children: [
           // Map Preview
           ClipRRect(
@@ -628,8 +636,11 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen>
           ),
         ],
       ),
-    );
-  }
+     ),
+    ),
+   ),
+  );
+}
 
   Widget _buildMapPreview() {
     if (_isLocating) {
@@ -1195,7 +1206,7 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen>
                           child: InkWell(
                             borderRadius: BorderRadius.circular(14),
                             onTap: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              ScaffoldMessenger.of(context).hideCurrentSnackBar(); ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content:
                                       Text('Menghubungi driver...'),

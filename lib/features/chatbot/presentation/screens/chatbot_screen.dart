@@ -1,12 +1,14 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/error_handler.dart';
 import '../../../../core/widgets/custom_bottom_nav_bar.dart';
 import '../widgets/chat_bubble.dart';
 import '../widgets/chat_input_area.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/chat_provider.dart';
 
 class ChatbotScreen extends ConsumerWidget {
@@ -19,8 +21,11 @@ class ChatbotScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundScreen,
-      body: Column(
-        children: [
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            children: [
           _buildHeader(context, ref),
           Expanded(
             child: isLoadingHistory
@@ -69,7 +74,9 @@ class ChatbotScreen extends ConsumerWidget {
                 ),
           ),
           const ChatInputArea(),
-        ],
+            ],
+          ),
+        ),
       ),
       bottomNavigationBar: const CustomBottomNavBar(currentIndex: 1),
     );
@@ -243,7 +250,7 @@ class ChatbotScreen extends ConsumerWidget {
                           );
                         },
                         loading: () => const CardSkeletonLoader(count: 3),
-                        error: (err, stack) => Center(child: Text('Error: $err')),
+                        error: (err, stack) => Center(child: Text(ErrorHandler.getMessage(err))),
                       ),
                     ),
                   ],

@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -38,18 +39,23 @@ class ChatBubble extends StatelessWidget {
           
         Expanded(
           child: Container(
-            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isUser ? AppColors.primary : AppColors.backgroundWhite,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.shadowColor,
-                  blurRadius: 8,
+                  color: AppColors.shadowColor.withOpacity(0.05),
+                  blurRadius: 10,
                   offset: const Offset(0, 4),
                 )
               ],
             ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  color: isUser ? AppColors.primary.withOpacity(0.85) : Colors.white.withOpacity(0.85),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -94,8 +100,11 @@ class ChatBubble extends StatelessWidget {
                 ),
               ],
             ),
+           ),
           ),
+         ),
         ),
+      ),
         
         if (isUser) ...[
           const SizedBox(width: 8),

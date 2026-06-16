@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/validators.dart';
+import '../../../../core/utils/error_handler.dart';
 import '../widgets/auth_text_field.dart';
 import '../widgets/auth_label.dart';
 import '../widgets/phone_text_field.dart';
@@ -48,7 +50,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           onPressed: () => context.pop(),
         ),
         title: const Text(
-          'Register',
+          'Daftar Akun',
           style: TextStyle(color: AppColors.textDark, fontSize: 18, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
@@ -64,12 +66,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const AuthLabel(text: 'Full Name '),
+                  const AuthLabel(text: 'Nama Lengkap '),
                   const SizedBox(height: 8),
                   AuthTextField(
-                    hint: 'Enter full name', 
+                    hint: 'Masukkan nama lengkap', 
                     controller: _nameController, 
-                    validator: (v) => (v == null || v.isEmpty) ? 'Nama lengkap wajib diisi' : null,
+                    validator: (v) => Validators.validateRequired(v, 'Nama lengkap'),
                     onChanged: (v) => setState(() {})
                   ),
                   const SizedBox(height: 20),
@@ -77,38 +79,27 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   const AuthLabel(text: 'Email '),
                   const SizedBox(height: 8),
                   AuthTextField(
-                    hint: 'example@gmail.com', 
+                    hint: 'contoh@email.com', 
                     controller: _emailController, 
                     keyboardType: TextInputType.emailAddress,
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return 'Email wajib diisi';
-                      if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(v)) return 'Format email tidak valid';
-                      return null;
-                    },
+                    validator: Validators.validateEmail,
                     onChanged: (v) => setState(() {})
                   ),
                   const SizedBox(height: 20),
                   
-                  const AuthLabel(text: 'Phone Number '),
+                  const AuthLabel(text: 'Nomor Telepon '),
                   const SizedBox(height: 8),
                   PhoneTextField(controller: _phoneController),
                   const SizedBox(height: 20),
                   
-                  const AuthLabel(text: 'Password '),
+                  const AuthLabel(text: 'Kata Sandi '),
                   const SizedBox(height: 8),
                   AuthTextField(
-                    hint: 'Enter your password',
+                    hint: 'Masukkan kata sandi',
                     isPassword: true,
                     controller: _passwordController,
                     obscureText: _obscurePassword,
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return 'Password wajib diisi';
-                      if (v.length < 8) return 'Minimal 8 karakter';
-                      if (!RegExp(r"(?=.*[a-z])").hasMatch(v)) return 'Harus mengandung huruf kecil';
-                      if (!RegExp(r"(?=.*[A-Z])").hasMatch(v)) return 'Harus mengandung huruf besar';
-                      if (!RegExp(r"(?=.*\d)").hasMatch(v)) return 'Harus mengandung angka';
-                      return null;
-                    },
+                    validator: Validators.validatePassword,
                     onChanged: (v) => setState(() {}),
                     onTogglePassword: () {
                       setState(() {
@@ -120,10 +111,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   _buildPasswordValidations(),
                   const SizedBox(height: 20),
                   
-                  const AuthLabel(text: 'Confirmation Password '),
+                  const AuthLabel(text: 'Konfirmasi Kata Sandi '),
                   const SizedBox(height: 8),
                   AuthTextField(
-                    hint: 'Enter your password',
+                    hint: 'Masukkan ulang kata sandi',
                     isPassword: true,
                     controller: _confirmPasswordController,
                     obscureText: _obscureConfirmPassword,
@@ -149,11 +140,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 onPressed: ref.watch(authStateProvider) ? null : () async {
                   if (!_formKey.currentState!.validate()) return;
                   if (_phoneController.text.length < 8) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Nomor telepon tidak valid')));
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar(); 
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Nomor telepon tidak valid', style: TextStyle(color: Colors.white)), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating));
                     return;
                   }
-                  if (_passwordController.text != _confirmPasswordController.text) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Passwords do not match')));
+                  final confirmError = Validators.validateConfirmPassword(_confirmPasswordController.text, _passwordController.text);
+                  if (confirmError != null) {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar(); 
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(confirmError, style: const TextStyle(color: Colors.white)), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating));
                     return;
                   }
                   try {
@@ -169,8 +163,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     }
                   } catch (e) {
                     if (context.mounted) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(e.toString().replaceAll('Exception: ', ''))),
+                        SnackBar(
+                          content: Text(ErrorHandler.getMessage(e), style: const TextStyle(color: Colors.white)),
+                          backgroundColor: Colors.red,
+                          behavior: SnackBarBehavior.floating,
+                        ),
                       );
                     }
                   }
@@ -187,7 +186,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 child: ref.watch(authStateProvider) 
                   ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                   : const Text(
-                      'Next',
+                      'Daftar',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
               ),
@@ -203,10 +202,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       spacing: 8,
       runSpacing: 4,
       children: [
-        _validationItem('At least 8 characters'),
-        _validationItem('Uppercase'),
-        _validationItem('Lowercase'),
-        _validationItem('Number'),
+        _validationItem('Minimal 8 karakter'),
+        _validationItem('Huruf Besar'),
+        _validationItem('Huruf Kecil'),
+        _validationItem('Angka'),
       ],
     );
   }

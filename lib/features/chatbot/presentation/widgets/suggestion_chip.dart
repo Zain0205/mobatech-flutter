@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -14,13 +15,28 @@ class SuggestionChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.borderGrey),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor.withOpacity(0.05),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      child: Row(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: AppColors.backgroundWhite.withOpacity(0.85),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppColors.borderGrey.withOpacity(0.5)),
+            ),
+            child: Row(
         children: [
           Icon(icon, size: 16, color: AppColors.textGrey),
           const SizedBox(width: 6),
@@ -28,8 +44,11 @@ class SuggestionChip extends StatelessWidget {
             label,
             style: const TextStyle(fontSize: 12, color: AppColors.textGrey, fontWeight: FontWeight.w500),
           ),
-        ],
-      ),
-    );
-  }
+            ],
+          ),
+          ),
+        ),
+       ),
+      );
+    }
 }

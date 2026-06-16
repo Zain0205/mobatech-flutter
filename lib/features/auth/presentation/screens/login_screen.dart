@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/validators.dart';
+import '../../../../core/utils/error_handler.dart';
 import '../widgets/auth_text_field.dart';
 import '../widgets/auth_label.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../../../appointment/providers/appointment_provider.dart';
@@ -108,7 +110,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
-                      'Welcome back',
+                      'Halo, Selamat Datang 👋',
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -117,7 +119,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      'Log in to Hermina Mobile Apps',
+                      'Masuk ke Hermina Mobile Apps',
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.textDark,
@@ -128,30 +130,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     const AuthLabel(text: 'Email '),
                     const SizedBox(height: 8),
                     AuthTextField(
-                      hint: 'example@gmail.com',
+                      hint: 'contoh@email.com',
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) return 'Email wajib diisi';
-                        if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) return 'Format email tidak valid';
-                        return null;
-                      },
+                      validator: Validators.validateEmail,
                       onChanged: (v) => setState(() {}),
                     ),
                     const SizedBox(height: 20),
                     
-                    const AuthLabel(text: 'Password '),
+                    const AuthLabel(text: 'Kata Sandi '),
                     const SizedBox(height: 8),
                     AuthTextField(
-                      hint: 'example123',
+                      hint: 'contoh123',
                       isPassword: true,
                       obscureText: _obscurePassword,
                       controller: _passwordController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) return 'Password wajib diisi';
-                        if (value.length < 8) return 'Password minimal 8 karakter';
-                        return null;
-                      },
+                      validator: Validators.validatePassword,
                       onChanged: (v) => setState(() {}),
                       onTogglePassword: () {
                         setState(() {
@@ -184,7 +178,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                             const SizedBox(width: 8),
                             const Text(
-                              'Remember me',
+                              'Ingat saya',
                               style: TextStyle(color: AppColors.textGrey, fontSize: 14),
                             ),
                           ],
@@ -197,7 +191,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
                           child: const Text(
-                            'Forgot password?',
+                            'Lupa kata sandi?',
                             style: TextStyle(color: AppColors.primary, fontSize: 14, fontWeight: FontWeight.w500),
                           ),
                         ),
@@ -225,8 +219,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             }
                           } catch (e) {
                             if (context.mounted) {
+                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(e.toString().replaceAll('Exception: ', ''))),
+                                SnackBar(
+                                  content: Text(ErrorHandler.getMessage(e), style: const TextStyle(color: Colors.white)),
+                                  backgroundColor: Colors.red,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
                               );
                             }
                           }
@@ -244,7 +243,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         child: ref.watch(authStateProvider)
                           ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                           : const Text(
-                              'Sign In',
+                              'Masuk',
                               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                             ),
                       ),
@@ -255,13 +254,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          "Don't have an account? ",
+                          "Belum punya akun? ",
                           style: TextStyle(color: AppColors.textGrey, fontSize: 14),
                         ),
                         GestureDetector(
                           onTap: () => context.push('/register'),
                           child: const Text(
-                            'Sign up.',
+                            'Daftar',
                             style: TextStyle(color: AppColors.primary, fontSize: 14, fontWeight: FontWeight.w500),
                           ),
                         ),

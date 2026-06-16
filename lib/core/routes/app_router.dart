@@ -15,6 +15,10 @@ import '../../features/pharmacy/presentation/screens/order_tracking_screen.dart'
 import '../../features/pharmacy/presentation/screens/cart_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
+import '../../features/profile/presentation/screens/medical_records_screen.dart';
+import '../../features/profile/presentation/screens/family_members_screen.dart';
+import '../../features/profile/presentation/screens/settings_screen.dart';
+import '../../features/profile/presentation/screens/help_support_screen.dart';
 import '../../features/home/presentation/screens/search_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -84,6 +88,22 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/profile/edit',
         builder: (context, state) => const EditProfileScreen(),
+      ),
+      GoRoute(
+        path: '/profile/medical-records',
+        builder: (context, state) => const MedicalRecordsScreen(),
+      ),
+      GoRoute(
+        path: '/profile/family-members',
+        builder: (context, state) => const FamilyMembersScreen(),
+      ),
+      GoRoute(
+        path: '/profile/settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/profile/help-support',
+        builder: (context, state) => const HelpSupportScreen(),
       ),
     ],
   );

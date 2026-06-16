@@ -1,10 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/error_handler.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../../providers/appointment_provider.dart';
-import 'package:intl/intl.dart';
 import 'appointment_detail_screen.dart';
 
 class UserAppointmentsScreen extends ConsumerWidget {
@@ -22,7 +24,23 @@ class UserAppointmentsScreen extends ConsumerWidget {
             onRefresh: () async {
               ref.refresh(userAppointmentsProvider);
             },
-            child: CustomScrollView(
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0.0, end: 1.0),
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeOutCubic,
+              builder: (context, value, child) {
+                return Opacity(
+                  opacity: value,
+                  child: Transform.translate(
+                    offset: Offset(0, 30 * (1 - value)),
+                    child: child,
+                  ),
+                );
+              },
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 800),
+                  child: CustomScrollView(
               slivers: [
                 _buildSliverAppBar(context),
                 if (appointments.isEmpty)
@@ -52,11 +70,14 @@ class UserAppointmentsScreen extends ConsumerWidget {
                     ),
                   ),
               ],
+                  ),
+                ),
+              ),
             ),
           );
         },
         loading: () => const CardSkeletonLoader(count: 4),
-        error: (e, stack) => Center(child: Text('Error: $e')),
+        error: (e, stack) => Center(child: Text(ErrorHandler.getMessage(e))),
       ),
     );
   }
@@ -102,17 +123,22 @@ class UserAppointmentsScreen extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor.withOpacity(0.06),
+            color: AppColors.shadowColor.withOpacity(0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           )
         ],
       ),
-      child: Material(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            color: Colors.white.withOpacity(0.85),
+            child: Material(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(20),
         clipBehavior: Clip.antiAlias,
@@ -234,12 +260,15 @@ class UserAppointmentsScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  ),
+);
+}
 
   Widget _buildGlassStatusChip(String status) {
     Color baseColor;
@@ -313,15 +342,14 @@ class UserAppointmentsScreen extends ConsumerWidget {
         await repo.cancelAppointment(id);
         ref.refresh(userAppointmentsProvider);
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          ScaffoldMessenger.of(context).hideCurrentSnackBar(); ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Janji temu berhasil dibatalkan')),
           );
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Gagal membatalkan: $e')),
-          );
+          ScaffoldMessenger.of(context).hideCurrentSnackBar(); 
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(ErrorHandler.getMessage(e), style: const TextStyle(color: Colors.white)), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating));
         }
       }
     }

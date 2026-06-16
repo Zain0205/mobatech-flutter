@@ -324,7 +324,7 @@ class _PharmacyMainScreenState extends ConsumerState<PharmacyMainScreen> with Si
                           : GestureDetector(
                               onTap: () {
                                 ref.read(cartProvider.notifier).addToCart(medicine.id, 1);
-                                ScaffoldMessenger.of(context).showSnackBar(
+                                ScaffoldMessenger.of(context).hideCurrentSnackBar(); ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text('${medicine.name} ditambahkan ke keranjang'),
                                     backgroundColor: AppColors.successGreen,

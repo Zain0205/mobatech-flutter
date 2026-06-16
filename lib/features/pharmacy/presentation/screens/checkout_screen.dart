@@ -79,7 +79,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar(); ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Pesanan berhasil dibuat!')),
                   );
                   context.go('/pharmacy/tracking');
