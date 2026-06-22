@@ -59,6 +59,8 @@ class ChatbotScreen extends ConsumerWidget {
                     final msg = messages[index];
                     final isUser = msg['role'] == 'user';
                     final content = msg['content'] ?? '';
+                    final imagePath = msg['imagePath'] as String?;
+                    final filePath = msg['filePath'] as String?;
                     final isModelLoading = !isUser && content.toString().isEmpty;
 
                     return Padding(
@@ -68,6 +70,8 @@ class ChatbotScreen extends ConsumerWidget {
                         time: '', // You can format time if needed
                         isUser: isUser,
                         isLoading: isModelLoading,
+                        imagePath: imagePath,
+                        filePath: filePath,
                       ),
                     );
                   },

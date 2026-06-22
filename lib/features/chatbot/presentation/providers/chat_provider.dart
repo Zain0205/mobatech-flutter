@@ -58,20 +58,20 @@ class ChatMessagesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     }
   }
 
-  Future<void> createNewSessionAndSend(String title, String message) async {
+  Future<void> createNewSessionAndSend(String title, String message, {String? imagePath, String? filePath}) async {
     final session = await _repository.createSession(title);
     final sessionId = session['ID'];
     _ref.read(currentSessionIdProvider.notifier).state = sessionId;
     _ref.invalidate(chatSessionsProvider); // refresh history
     state = [];
-    await sendMessage(sessionId, message);
+    await sendMessage(sessionId, message, imagePath: imagePath, filePath: filePath);
   }
 
-  Future<void> sendMessage(int sessionId, String message) async {
+  Future<void> sendMessage(int sessionId, String message, {String? imagePath, String? filePath}) async {
     if (isStreaming) return;
     
     // Optimistic UI for user message
-    state = [...state, {'role': 'user', 'content': message}];
+    state = [...state, {'role': 'user', 'content': message, 'imagePath': imagePath, 'filePath': filePath}];
     isStreaming = true;
     
     // Empty message for model response to stream into

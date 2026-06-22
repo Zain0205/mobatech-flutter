@@ -15,6 +15,7 @@ import '../../../../core/widgets/skeleton_loader.dart';
 import '../../../services/presentation/providers/service_provider.dart';
 import '../../../appointment/providers/appointment_provider.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
+import '../../../patient_support/providers/patient_support_provider.dart';
 import 'search_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -140,6 +141,35 @@ class HomeScreen extends ConsumerWidget {
                         ],
                       ),
                     ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final unreadCountAsync = ref.watch(unreadReminderCountProvider);
+                        return Stack(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.notifications_outlined, color: AppColors.textWhite, size: 28),
+                              onPressed: () => context.push('/notifications'),
+                            ),
+                            if (unreadCountAsync.value != null && unreadCountAsync.value! > 0)
+                              Positioned(
+                                right: 6,
+                                top: 6,
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.errorRed,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Text(
+                                    unreadCountAsync.value!.toString(),
+                                    style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -214,10 +244,11 @@ class HomeScreen extends ConsumerWidget {
             iconColor: AppColors.primary,
             onTap: () => context.push('/appointment'),
           ),
-          const QuickAccessItem(
+          QuickAccessItem(
             icon: Icons.card_giftcard_outlined,
             label: 'Penawaran\nKhusus',
             iconColor: AppColors.primary,
+            onTap: () => context.push('/special-offers'),
           ),
           QuickAccessItem(
             icon: Icons.smart_toy_outlined,

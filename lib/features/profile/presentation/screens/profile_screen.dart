@@ -241,7 +241,7 @@ class ProfileScreen extends ConsumerWidget {
                         if (item['title'] == 'Ubah Profil') {
                           context.push('/profile/edit');
                         } else if (item['title'] == 'Data Rekam Medis') {
-                          context.push('/profile/medical-records');
+                          context.push('/medical-results');
                         } else if (item['title'] == 'Anggota Keluarga') {
                           context.push('/profile/family-members');
                         } else if (item['title'] == 'Pengaturan') {

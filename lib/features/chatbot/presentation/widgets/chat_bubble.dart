@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -9,6 +10,8 @@ class ChatBubble extends StatelessWidget {
   final String time;
   final bool isUser;
   final bool isLoading;
+  final String? imagePath;
+  final String? filePath;
 
   const ChatBubble({
     super.key,
@@ -16,6 +19,8 @@ class ChatBubble extends StatelessWidget {
     required this.time,
     this.isUser = false,
     this.isLoading = false,
+    this.imagePath,
+    this.filePath,
   });
 
   @override
@@ -59,6 +64,32 @@ class ChatBubble extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (imagePath != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(File(imagePath!), fit: BoxFit.cover),
+                    ),
+                  ),
+                if (filePath != null)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 8.0),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: isUser ? Colors.white30 : AppColors.borderGrey),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.description, color: isUser ? Colors.white : Colors.orange),
+                        const SizedBox(width: 8),
+                        Expanded(child: Text(filePath!.split('/').last, style: TextStyle(color: isUser ? Colors.white : AppColors.textDark, fontSize: 12))),
+                      ],
+                    ),
+                  ),
+
                 if (isLoading)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,11 +99,11 @@ class ChatBubble extends StatelessWidget {
                       SkeletonLoader(height: 14, width: 180),
                     ],
                   )
-                else
+                else if (text.isNotEmpty)
                   isUser 
                     ? Text(
                         text,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14, 
                           color: AppColors.textWhite, 
                           height: 1.4, 
@@ -82,11 +113,11 @@ class ChatBubble extends StatelessWidget {
                     : MarkdownBody(
                         data: text,
                         styleSheet: MarkdownStyleSheet(
-                          p: TextStyle(fontSize: 14, color: AppColors.textDark, height: 1.4, fontWeight: FontWeight.w500),
+                          p: const TextStyle(fontSize: 14, color: AppColors.textDark, height: 1.4, fontWeight: FontWeight.w500),
                           pPadding: const EdgeInsets.only(bottom: 8),
-                          listBullet: TextStyle(color: AppColors.textDark),
+                          listBullet: const TextStyle(color: AppColors.textDark),
                           listBulletPadding: const EdgeInsets.only(right: 8),
-                          strong: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold),
+                          strong: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold),
                           blockSpacing: 12.0,
                         ),
                       ),

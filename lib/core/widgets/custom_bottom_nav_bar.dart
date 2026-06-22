@@ -19,6 +19,8 @@ class CustomBottomNavBar extends StatelessWidget {
       onTap: (index) {
         if (index == 0 && currentIndex != 0) context.go('/home');
         if (index == 1 && currentIndex != 1) context.go('/chatbot');
+        if (index == 2 && currentIndex != 2) context.go('/for-you');
+        if (index == 3 && currentIndex != 3) context.go('/history');
         if (index == 4 && currentIndex != 4) context.go('/profile');
       },
       items: const [
