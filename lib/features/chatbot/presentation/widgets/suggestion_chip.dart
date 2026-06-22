@@ -19,7 +19,7 @@ class SuggestionChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor.withOpacity(0.05),
+            color: AppColors.shadowColor.withValues(alpha: 0.05),
             blurRadius: 5,
             offset: const Offset(0, 2),
           ),
@@ -32,9 +32,9 @@ class SuggestionChip extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              color: AppColors.backgroundWhite.withOpacity(0.85),
+              color: AppColors.backgroundWhite.withValues(alpha: 0.85),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.borderGrey.withOpacity(0.5)),
+              border: Border.all(color: AppColors.borderGrey.withValues(alpha: 0.5)),
             ),
             child: Row(
         children: [

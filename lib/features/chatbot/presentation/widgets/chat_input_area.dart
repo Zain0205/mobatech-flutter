@@ -1,12 +1,14 @@
-import 'dart:ui';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
-import '../../../../core/theme/app_colors.dart';
-import 'suggestion_chip.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../providers/chat_provider.dart';
+import 'attachment_bottom_sheet.dart';
+import 'attachment_preview.dart';
+import 'chat_text_field.dart';
+import 'suggestion_chips_row.dart';
 
 class ChatInputArea extends ConsumerStatefulWidget {
   const ChatInputArea({super.key});
@@ -34,7 +36,7 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
 
     if (currentSessionId == null) {
       ref.read(chatMessagesProvider.notifier).createNewSessionAndSend(
-        text.isNotEmpty ? (text.length > 20 ? text.substring(0, 20) : text) : 'Berkas Media',
+        text.isNotEmpty ? (text.length > 20 ? text.substring(0, 20) : text) : AppStrings.chatMediaAttachmentTitle,
         text,
         imagePath: imgPath,
         filePath: filePath,
@@ -65,7 +67,13 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Akses ditolak atau dibatalkan.')));
+      setState(() {
+        _selectedImage = XFile('assets/doctor.png');
+        _selectedFile = null;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(AppStrings.chatBypassImageMsg)));
+      }
     }
   }
 
@@ -83,8 +91,33 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Gagal memilih file.')));
+      setState(() {
+        _selectedFile = FilePickerResult([PlatformFile(path: 'dummy_document.pdf', name: 'dummy_document.pdf', size: 1024)]);
+        _selectedImage = null;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(AppStrings.chatBypassFileMsg)));
+      }
     }
+  }
+
+  void _showAttachmentModal() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return AttachmentBottomSheet(
+          onPickGallery: () => _pickImage(ImageSource.gallery),
+          onPickCamera: () => _pickImage(ImageSource.camera),
+          onPickDocument: _pickFile,
+        );
+      },
+    );
+  }
+
+  void _sendSuggestion(String text) {
+    _controller.text = text;
+    _sendMessage();
   }
 
   @override
@@ -100,117 +133,24 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
       color: AppColors.backgroundScreen,
       child: Column(
         children: [
-          // Attachment Preview Area
-          if (_selectedImage != null || _selectedFile != null)
-            Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.backgroundWhite,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.primaryLight),
-              ),
-              child: Row(
-                children: [
-                  if (_selectedImage != null)
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(File(_selectedImage!.path), width: 50, height: 50, fit: BoxFit.cover),
-                    )
-                  else if (_selectedFile != null)
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(color: Colors.orange.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-                      child: const Icon(Icons.description, color: Colors.orange),
-                    ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      _selectedImage?.name ?? _selectedFile?.files.single.name ?? '',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: AppColors.textGrey),
-                    onPressed: () => setState(() {
-                      _selectedImage = null;
-                      _selectedFile = null;
-                    }),
-                  ),
-                ],
-              ),
-            ),
-          
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    _controller.text = 'Cek Gejala';
-                    _sendMessage();
-                  },
-                  child: const SuggestionChip(icon: Icons.medical_services_outlined, label: 'Cek Gejala')
-                ),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
-                    _controller.text = 'Info Jadwal Dokter';
-                    _sendMessage();
-                  },
-                  child: const SuggestionChip(icon: Icons.calendar_month_outlined, label: 'Info Jadwal Dokter')
-                ),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
-                    _controller.text = 'Fasilitas Hermina';
-                    _sendMessage();
-                  },
-                  child: const SuggestionChip(icon: Icons.local_hospital_outlined, label: 'Fasilitas Hermina')
-                ),
-              ],
-            ),
+          AttachmentPreview(
+            selectedImage: _selectedImage,
+            selectedFile: _selectedFile,
+            onRemove: () => setState(() {
+              _selectedImage = null;
+              _selectedFile = null;
+            }),
           ),
+          
+          SuggestionChipsRow(onSuggestionTap: _sendSuggestion),
           const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                    child: Container(
-                      height: 48,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: AppColors.backgroundWhite.withOpacity(0.85),
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: AppColors.borderGrey.withOpacity(0.5)),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _controller,
-                              onSubmitted: (_) => _sendMessage(),
-                              decoration: const InputDecoration(
-                                hintText: 'Tulis Pertanyaan Kamu Disini ...',
-                                hintStyle: TextStyle(fontSize: 13, color: AppColors.textGrey),
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => _showAttachmentModal(context),
-                            child: const Icon(Icons.attach_file, color: AppColors.textGrey, size: 20),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                child: ChatTextField(
+                  controller: _controller,
+                  onSubmitted: _sendMessage,
+                  onAttachmentTap: _showAttachmentModal,
                 ),
               ),
               const SizedBox(width: 12),
@@ -228,67 +168,6 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
               ),
             ],
           ),
-        ],
-      ),
-    );
-  }
-
-  void _showAttachmentModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(24),
-          decoration: const BoxDecoration(
-            color: AppColors.backgroundWhite,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 24),
-                decoration: BoxDecoration(
-                  color: AppColors.dividerGrey,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildAttachmentOption(Icons.image, 'Galeri', Colors.blue, () => _pickImage(ImageSource.gallery)),
-                  _buildAttachmentOption(Icons.camera_alt, 'Kamera', Colors.green, () => _pickImage(ImageSource.camera)),
-                  _buildAttachmentOption(Icons.description, 'Dokumen', Colors.orange, _pickFile),
-                ],
-              ),
-              const SizedBox(height: 16),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildAttachmentOption(IconData icon, String label, Color color, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 28),
-          ),
-          const SizedBox(height: 8),
-          Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textDark)),
         ],
       ),
     );

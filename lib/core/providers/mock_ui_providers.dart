@@ -25,7 +25,10 @@ class Article {
 final forYouArticlesProvider = FutureProvider.autoDispose<List<Article>>((ref) async {
   final dio = ref.read(dioProvider);
   final response = await dio.get('/for-you/recommendations');
-  final data = response.data['data'] as List;
+  final dynamic responseData = response.data;
+  final List data = responseData is Map && responseData.containsKey('data') 
+      ? responseData['data'] 
+      : responseData as List;
   return data.map((e) => Article.fromJson(e)).toList();
 });
 
@@ -40,7 +43,10 @@ class PharmacyOrderMock {
 final pharmacyHistoryProvider = FutureProvider.autoDispose<List<PharmacyOrderMock>>((ref) async {
   final dio = ref.read(dioProvider);
   final response = await dio.get('/pharmacy/orders');
-  final data = response.data['data'] as List;
+  final dynamic responseData = response.data;
+  final List data = responseData is Map && responseData.containsKey('data') 
+      ? responseData['data'] 
+      : responseData as List;
   return data.map((e) {
     // e.g., e['order_number'], e['status'], e['CreatedAt']
     final dt = DateTime.parse(e['CreatedAt'] ?? DateTime.now().toIso8601String());
@@ -62,7 +68,7 @@ class SpecialOffer {
 }
 
 final specialOffersProvider = Provider<List<SpecialOffer>>((ref) => [
-  SpecialOffer('Diskon 50% Layanan Gigi', 'Berlaku hingga 31 Okt 2026', AppColors.primary),
-  SpecialOffer('Medical Checkup Keluarga', 'Potongan Harga Rp 500.000', const Color(0xFF265A8E)),
-  SpecialOffer('Vaksinasi Flu Gratis', 'Khusus Pengguna Baru', AppColors.successGreen),
+  SpecialOffer('Paket Persalinan', 'Gratis Konsultasi Laktasi', AppColors.primary),
+  SpecialOffer('Medical Checkup Keluarga', 'Potongan Harga Rp 500.000', AppColors.agendaHeader),
+  SpecialOffer('Vaksinasi Anak', 'Cashback 20%', AppColors.successGreen),
 ]);

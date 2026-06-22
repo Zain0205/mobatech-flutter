@@ -27,7 +27,7 @@ class RegisterScreen extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [AppColors.primary, Color(0xFF2E7D32)],
+              colors: [AppColors.primary, AppColors.primaryDark],
             ),
           ),
           child: Stack(

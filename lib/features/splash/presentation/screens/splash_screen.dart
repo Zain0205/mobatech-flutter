@@ -50,6 +50,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('jwt_token');
 
+    if (!mounted) return;
+
     if (token != null && token.isNotEmpty) {
       globalAuthToken = token;
       context.go('/home');

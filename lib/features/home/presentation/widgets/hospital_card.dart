@@ -22,7 +22,7 @@ class HospitalCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor.withOpacity(0.05),
+            color: AppColors.shadowColor.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           )
@@ -33,7 +33,7 @@ class HospitalCard extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
-            color: Colors.white.withOpacity(0.85),
+            color: Colors.white.withValues(alpha: 0.85),
             padding: const EdgeInsets.all(16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -85,7 +85,7 @@ class HospitalCard extends StatelessWidget {
                 Container(
                   width: 1.5,
                   height: 40,
-                  color: AppColors.dividerGrey.withOpacity(0.5),
+                  color: AppColors.dividerGrey.withValues(alpha: 0.5),
                 ),
                 const SizedBox(width: 16),
                 Column(
@@ -94,7 +94,7 @@ class HospitalCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.borderGrey.withOpacity(0.5)),
+                        border: Border.all(color: AppColors.borderGrey.withValues(alpha: 0.5)),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Icon(Icons.directions_outlined, color: AppColors.primary, size: 20),
@@ -110,7 +110,7 @@ class HospitalCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.borderGrey.withOpacity(0.5)),
+                        border: Border.all(color: AppColors.borderGrey.withValues(alpha: 0.5)),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Icon(Icons.more_vert, color: AppColors.primary, size: 20),

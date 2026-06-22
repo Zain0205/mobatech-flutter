@@ -17,11 +17,11 @@ class AgendaCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(top: 12, left: 24, right: 24),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.85),
+          color: Colors.white.withValues(alpha: 0.85),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.05),
+              color: AppColors.shadowColor.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             )

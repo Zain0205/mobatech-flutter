@@ -21,12 +21,12 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   // Top Green Header (Scrolls together with the page)
                   Container(
-                    height: constraints.maxHeight * 0.48,
+                    height: constraints.maxHeight * 0.35,
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [AppColors.primary, Color(0xFF2E7D32)],
+                        colors: [AppColors.primary, AppColors.primaryDark],
                       ),
                     ),
                     child: Stack(
@@ -50,8 +50,8 @@ class LoginScreen extends StatelessWidget {
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Padding(
-                            padding: EdgeInsets.only(bottom: constraints.maxHeight * 0.08),
-                            child: Image.asset('assets/doctor.png', height: constraints.maxHeight * 0.35),
+                            padding: EdgeInsets.only(bottom: constraints.maxHeight * 0.06),
+                            child: Image.asset('assets/doctor.png', height: constraints.maxHeight * 0.25),
                           ),
                         ),
                       ],
@@ -60,8 +60,8 @@ class LoginScreen extends StatelessWidget {
 
                   // Bottom White Form (Overlaps the green header)
                   Container(
-                    margin: EdgeInsets.only(top: constraints.maxHeight * 0.42),
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight * 0.58),
+                    margin: EdgeInsets.only(top: constraints.maxHeight * 0.30),
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight * 0.70),
                     width: double.infinity,
                     decoration: const BoxDecoration(
                       color: AppColors.backgroundWhite,
@@ -86,7 +86,7 @@ class LoginScreen extends StatelessWidget {
                           AppStrings.loginSubtitle,
                           style: TextStyle(fontSize: 14, color: AppColors.textGrey),
                         ),
-                        SizedBox(height: 32),
+                        SizedBox(height: 24),
                         LoginForm(),
                       ],
                     ),

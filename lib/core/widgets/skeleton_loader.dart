@@ -23,7 +23,7 @@ class SkeletonLoader extends StatelessWidget {
       width: width,
       height: height,
       child: Shimmer.fromColors(
-        baseColor: AppColors.borderGrey.withOpacity(0.5),
+        baseColor: AppColors.borderGrey.withValues(alpha: 0.5),
         highlightColor: AppColors.backgroundWhite,
         child: Container(
           decoration: BoxDecoration(

@@ -8,6 +8,7 @@ import '../../../../core/utils/validators.dart';
 import '../../../../core/utils/error_handler.dart';
 import 'auth_label.dart';
 import 'auth_text_field.dart';
+import 'social_login_button.dart';
 import '../providers/auth_provider.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../../../appointment/providers/appointment_provider.dart';
@@ -78,7 +79,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             validator: Validators.validateEmail,
             onChanged: (_) => setState(() {}),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           const AuthLabel(text: AppStrings.passwordLabel),
           const SizedBox(height: 8),
           AuthTextField(
@@ -90,7 +91,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             onChanged: (_) => setState(() {}),
             onTogglePassword: () => setState(() => _obscurePassword = !_obscurePassword),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -117,7 +118,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               ),
             ],
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             height: AppSizes.buttonHeight,
@@ -136,7 +137,25 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                   : const Text(AppStrings.loginButton, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
+          const Row(
+            children: [
+              Expanded(child: Divider(color: AppColors.dividerGrey, thickness: 1.5)),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text(AppStrings.orContinueWith, style: TextStyle(color: AppColors.textGrey, fontSize: 14)),
+              ),
+              Expanded(child: Divider(color: AppColors.dividerGrey, thickness: 1.5)),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SocialLoginButton(
+            text: AppStrings.continueWithGoogle,
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Firebase Auth Google Sign-In: Coming Soon!')));
+            },
+          ),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

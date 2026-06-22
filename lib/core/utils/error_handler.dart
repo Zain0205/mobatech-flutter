@@ -1,11 +1,42 @@
+import 'package:dio/dio.dart';
+
 class ErrorHandler {
   static String getMessage(dynamic error) {
     if (error == null) return 'Terjadi kesalahan sistem yang tidak diketahui';
     
+    if (error is DioException) {
+      if (error.type == DioExceptionType.connectionTimeout || 
+          error.type == DioExceptionType.receiveTimeout || 
+          error.type == DioExceptionType.sendTimeout ||
+          error.type == DioExceptionType.connectionError) {
+        return 'Koneksi ke server terputus. Pastikan internet Anda stabil atau server sedang aktif.';
+      }
+      
+      if (error.response?.data != null) {
+        final data = error.response!.data;
+        if (data is Map<String, dynamic>) {
+          if (data.containsKey('errors') && data['errors'] != null) {
+            final errors = data['errors'] as Map<String, dynamic>;
+            if (errors.isNotEmpty) {
+              final firstError = errors.values.first;
+              if (firstError is List && firstError.isNotEmpty) {
+                return firstError.first.toString();
+              }
+            }
+          }
+          if (data.containsKey('message')) {
+            return data['message'].toString();
+          }
+          if (data.containsKey('error')) {
+            return data['error'].toString();
+          }
+        }
+      }
+    }
+
     String e = error.toString();
     String eLower = e.toLowerCase();
 
-    // Industry Standard Exception Translation (from AGENTS.md)
     if (eLower.contains('unauthenticated') || eLower.contains('401')) {
       return 'Sesi Anda telah habis. Silakan login kembali.';
     } else if (eLower.contains('unauthorized') || eLower.contains('403')) {
@@ -20,24 +51,16 @@ class ErrorHandler {
       return 'Terjadi kesalahan pada server. Coba beberapa saat lagi.';
     }
 
-    // Dio Exceptions and Network Errors
-    if (eLower.contains('dioexception') || eLower.contains('network error') || eLower.contains('connection refused') || eLower.contains('timeout')) {
-      return 'Koneksi ke server terputus. Pastikan internet Anda stabil atau server sedang aktif.';
-    }
-    
-    // Auth specific (Firebase/Custom)
     if (eLower.contains('invalid credentials') || eLower.contains('password salah') || eLower.contains('user not found')) {
       return 'Email atau kata sandi tidak sesuai. Silakan periksa kembali.';
     } else if (eLower.contains('email already exists') || eLower.contains('duplicate')) {
       return 'Email ini sudah terdaftar. Gunakan email lain.';
     }
     
-    // Clean raw exceptions before showing to user
     e = e.replaceAll('Exception:', '').replaceAll('Error:', '').trim();
     if (e.isEmpty) return 'Gagal memproses permintaan.';
     if (e.length > 50) return 'Gagal terhubung ke layanan (Error Timeout).';
     
-    // Capitalize first letter
     return '${e[0].toUpperCase()}${e.substring(1)}';
   }
 }

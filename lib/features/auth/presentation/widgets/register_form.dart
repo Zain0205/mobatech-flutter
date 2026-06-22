@@ -9,6 +9,7 @@ import '../../../../core/utils/error_handler.dart';
 import 'auth_label.dart';
 import 'auth_text_field.dart';
 import 'phone_text_field.dart';
+import 'social_login_button.dart';
 import '../providers/auth_provider.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 
@@ -145,7 +146,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.textWhite,
-                disabledBackgroundColor: AppColors.primary.withOpacity(0.6),
+                disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.6),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.borderRadiusXL)),
                 elevation: 0,
               ),
@@ -153,6 +154,24 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                   ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                   : const Text(AppStrings.registerButton, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
             ),
+          ),
+          const SizedBox(height: 24),
+          const Row(
+            children: [
+              Expanded(child: Divider(color: AppColors.dividerGrey, thickness: 1.5)),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text(AppStrings.orContinueWith, style: TextStyle(color: AppColors.textGrey, fontSize: 14)),
+              ),
+              Expanded(child: Divider(color: AppColors.dividerGrey, thickness: 1.5)),
+            ],
+          ),
+          const SizedBox(height: 24),
+          SocialLoginButton(
+            text: AppStrings.continueWithGoogle,
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Firebase Auth Google Sign-In: Coming Soon!')));
+            },
           ),
         ],
       ),

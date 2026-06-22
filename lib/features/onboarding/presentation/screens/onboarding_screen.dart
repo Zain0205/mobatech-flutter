@@ -48,7 +48,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [AppColors.primary, Color(0xFF2E7D32)],
+                colors: [AppColors.primary, AppColors.primaryDark],
               ),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(AppSizes.borderRadiusCard),

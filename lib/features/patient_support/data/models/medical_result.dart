@@ -20,15 +20,32 @@ class MedicalResult {
   });
 
   factory MedicalResult.fromJson(Map<String, dynamic> json) {
+    // Kombinasi result dan notes dari backend
+    final backendResult = json['result']?.toString() ?? '';
+    final backendNotes = json['notes']?.toString() ?? '';
+    final combinedDetails = backendResult.isNotEmpty 
+        ? '$backendResult\n\nCatatan Dokter:\n$backendNotes' 
+        : json['result_details']?.toString();
+
+    // Format tanggal (Ambil bagian YYYY-MM-DD saja jika ada T)
+    String dateStr = json['result_date']?.toString() ?? json['date']?.toString() ?? '';
+    if (dateStr.contains('T')) {
+      // Basic formatting, e.g. "2026-06-22T15:22:17Z" -> "22 Jun 2026" (or just keep YYYY-MM-DD)
+      final parts = dateStr.split('T')[0].split('-');
+      if (parts.length == 3) {
+        dateStr = '${parts[2]}-${parts[1]}-${parts[0]}'; // DD-MM-YYYY
+      }
+    }
+
     return MedicalResult(
       id: json['id']?.toString() ?? '',
       testName: json['test_name']?.toString() ?? json['testName']?.toString() ?? '',
-      date: json['date']?.toString() ?? '',
-      status: json['status']?.toString() ?? '',
-      hospitalName: json['hospital_name']?.toString() ?? json['hospitalName']?.toString() ?? '',
+      date: dateStr,
+      status: json['status']?.toString() ?? 'Selesai',
+      hospitalName: json['hospital_name']?.toString() ?? 'RS Hermina Kemayoran',
       doctorName: json['doctor_name']?.toString() ?? json['doctorName']?.toString(),
-      resultDetails: json['result_details']?.toString() ?? json['resultDetails']?.toString(),
-      documentUrl: json['document_url']?.toString() ?? json['documentUrl']?.toString(),
+      resultDetails: combinedDetails,
+      documentUrl: json['file_url']?.toString() ?? json['document_url']?.toString(),
     );
   }
 

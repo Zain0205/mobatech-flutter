@@ -48,7 +48,7 @@ class ChatBubble extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.shadowColor.withOpacity(0.05),
+                  color: AppColors.shadowColor.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 )
@@ -60,7 +60,7 @@ class ChatBubble extends StatelessWidget {
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Container(
                   padding: const EdgeInsets.all(16),
-                  color: isUser ? AppColors.primary.withOpacity(0.85) : Colors.white.withOpacity(0.85),
+                  color: isUser ? AppColors.primary.withValues(alpha: 0.85) : Colors.white.withValues(alpha: 0.85),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -77,7 +77,7 @@ class ChatBubble extends StatelessWidget {
                     margin: const EdgeInsets.only(bottom: 8.0),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: isUser ? Colors.white30 : AppColors.borderGrey),
                     ),

@@ -20,10 +20,10 @@ class AppointmentFilterChip extends StatelessWidget {
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: isSelected ? Colors.white : Colors.white.withOpacity(0.15),
+        color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isSelected ? Colors.white : Colors.white.withOpacity(0.3),
+          color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.3),
           width: 1,
         ),
       ),

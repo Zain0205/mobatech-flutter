@@ -44,7 +44,7 @@ class ReminderCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: reminder.isRead ? Colors.white : AppColors.primaryLight.withOpacity(0.3),
+        color: reminder.isRead ? Colors.white : AppColors.primaryLight.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: reminder.isRead ? AppColors.borderGrey : AppColors.primaryLight,
@@ -71,7 +71,7 @@ class ReminderCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: _getIconColor(reminder.type).withOpacity(0.1),
+                      color: _getIconColor(reminder.type).withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
