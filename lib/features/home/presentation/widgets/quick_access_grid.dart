@@ -7,6 +7,7 @@ import '../../../../core/utils/error_handler.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../../../services/presentation/providers/service_provider.dart';
 import 'quick_access_item.dart';
+import 'quick_access_more_menu.dart';
 
 class QuickAccessGrid extends ConsumerWidget {
   const QuickAccessGrid({super.key});
@@ -72,7 +73,7 @@ class QuickAccessGrid extends ConsumerWidget {
               label: AppStrings.menuOthers,
               iconColor: AppColors.primary,
               onTap: () {
-                _showMoreMenu(context, remainingItems);
+                showQuickAccessMoreMenu(context, remainingItems);
               },
             ),
           );
@@ -100,40 +101,6 @@ class QuickAccessGrid extends ConsumerWidget {
         childAspectRatio: MediaQuery.of(context).size.width / 4 / 115,
         children: items,
       ),
-    );
-  }
-
-  void _showMoreMenu(BuildContext context, List<Widget> items) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                AppStrings.menuOthersTitle,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              GridView.count(
-                crossAxisCount: 4,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 8,
-                childAspectRatio: MediaQuery.of(context).size.width / 4 / 115,
-                children: items,
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 

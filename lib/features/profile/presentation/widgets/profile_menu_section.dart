@@ -1,3 +1,5 @@
+import '../../../../core/constants/app_strings.dart';
+import '../../../../core/utils/custom_snackbar.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -24,7 +26,11 @@ class ProfileMenuSection extends ConsumerWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.05), blurRadius: 15, offset: const Offset(0, 5)),
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
         ],
       ),
       child: ClipRRect(
@@ -32,49 +38,68 @@ class ProfileMenuSection extends ConsumerWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Material(
-            color: Colors.white.withValues(alpha: 0.85),
+            color: AppColors.backgroundWhite.withValues(alpha: 0.85),
             child: Column(
               children: [
-                ...menuItems.map((item) => ListTile(
-                      leading: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(color: AppColors.primaryLight, borderRadius: BorderRadius.circular(10)),
-                        child: Icon(item['icon'] as IconData, color: AppColors.primary),
+                ...menuItems.map(
+                  (item) => ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryLight,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      title: Text(item['title'] as String, style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.textDark)),
-                      trailing: const Icon(Icons.chevron_right, color: AppColors.iconGrey),
-                      onTap: () {
-                        if (item['title'] == 'Ubah Profil') {
-                          context.push('/profile/edit');
-                        } else if (item['title'] == 'Data Rekam Medis') {
-                          context.push('/medical-results');
-                        } else if (item['title'] == 'Anggota Keluarga') {
-                          context.push('/profile/family-members');
-                        } else if (item['title'] == 'Pengaturan') {
-                          context.push('/profile/settings');
-                        } else if (item['title'] == 'Bantuan & Dukungan') {
-                          context.push('/profile/help-support');
-                        } else {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Menu ${item['title']} segera hadir!'),
-                              behavior: SnackBarBehavior.floating,
-                              duration: const Duration(milliseconds: 1500),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                            ),
-                          );
-                        }
-                      },
-                    )),
+                      child: Icon(
+                        item['icon'] as IconData,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    title: Text(
+                      item['title'] as String,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textDark,
+                      ),
+                    ),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: AppColors.iconGrey,
+                    ),
+                    onTap: () {
+                      if (item['title'] == 'Ubah Profil') {
+                        context.push('/profile/edit');
+                      } else if (item['title'] == 'Data Rekam Medis') {
+                        context.push('/medical-results');
+                      } else if (item['title'] == 'Anggota Keluarga') {
+                        context.push('/profile/family-members');
+                      } else if (item['title'] == 'Pengaturan') {
+                        context.push('/profile/settings');
+                      } else if (item['title'] == 'Bantuan & Dukungan') {
+                        context.push('/profile/help-support');
+                      } else {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        CustomSnackbar.showInfo(context, 'Menu ${item['title']} segera hadir!',);
+                      }
+                    },
+                  ),
+                ),
                 const Divider(height: 1),
                 ListTile(
                   leading: Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(color: Colors.red.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
-                    child: const Icon(Icons.logout, color: Colors.red),
+                    decoration: BoxDecoration(
+                      color: AppColors.errorRed.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(Icons.logout, color: AppColors.errorRed),
                   ),
-                  title: const Text('Keluar', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red)),
+                  title: Text(
+                    AppStrings.extKeluar,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.errorRed,
+                    ),
+                  ),
                   onTap: () async {
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.clear();

@@ -4,7 +4,9 @@ import '../data/models/reminder.dart';
 import '../data/repositories/patient_support_repository.dart';
 import '../../../../core/network/dio_client.dart';
 
-final patientSupportRepositoryProvider = Provider<PatientSupportRepository>((ref) {
+final patientSupportRepositoryProvider = Provider<PatientSupportRepository>((
+  ref,
+) {
   final dio = ref.read(dioProvider);
   return PatientSupportRepository(dio);
 });
@@ -14,10 +16,11 @@ final medicalResultsProvider = FutureProvider<List<MedicalResult>>((ref) async {
   return repo.getMedicalResults();
 });
 
-final remindersProvider = StateNotifierProvider<RemindersNotifier, AsyncValue<List<Reminder>>>((ref) {
-  final repo = ref.read(patientSupportRepositoryProvider);
-  return RemindersNotifier(repo);
-});
+final remindersProvider =
+    StateNotifierProvider<RemindersNotifier, AsyncValue<List<Reminder>>>((ref) {
+      final repo = ref.read(patientSupportRepositoryProvider);
+      return RemindersNotifier(repo);
+    });
 
 class RemindersNotifier extends StateNotifier<AsyncValue<List<Reminder>>> {
   final PatientSupportRepository _repository;

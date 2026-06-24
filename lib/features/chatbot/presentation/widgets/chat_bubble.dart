@@ -1,9 +1,7 @@
 import 'dart:ui';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/skeleton_loader.dart';
+import 'chat_bubble_parts.dart';
 
 class ChatBubble extends StatelessWidget {
   final String text;
@@ -36,12 +34,16 @@ class ChatBubble extends StatelessWidget {
               color: AppColors.primaryLight,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.smart_toy, color: AppColors.primary, size: 20),
+            child: const Icon(
+              Icons.smart_toy,
+              color: AppColors.primary,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 8),
         ] else
           const SizedBox(width: 48),
-          
+
         Expanded(
           child: Container(
             decoration: BoxDecoration(
@@ -51,7 +53,7 @@ class ChatBubble extends StatelessWidget {
                   color: AppColors.shadowColor.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
-                )
+                ),
               ],
             ),
             child: ClipRRect(
@@ -60,83 +62,41 @@ class ChatBubble extends StatelessWidget {
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Container(
                   padding: const EdgeInsets.all(16),
-                  color: isUser ? AppColors.primary.withValues(alpha: 0.85) : Colors.white.withValues(alpha: 0.85),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (imagePath != null)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(File(imagePath!), fit: BoxFit.cover),
-                    ),
-                  ),
-                if (filePath != null)
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 8.0),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: isUser ? Colors.white30 : AppColors.borderGrey),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.description, color: isUser ? Colors.white : Colors.orange),
-                        const SizedBox(width: 8),
-                        Expanded(child: Text(filePath!.split('/').last, style: TextStyle(color: isUser ? Colors.white : AppColors.textDark, fontSize: 12))),
-                      ],
-                    ),
-                  ),
-
-                if (isLoading)
-                  Column(
+                  color: isUser
+                      ? AppColors.primary.withValues(alpha: 0.85)
+                      : AppColors.backgroundWhite.withValues(alpha: 0.85),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SkeletonLoader(height: 14, width: 200, margin: const EdgeInsets.only(bottom: 8)),
-                      SkeletonLoader(height: 14, width: 150, margin: const EdgeInsets.only(bottom: 8)),
-                      SkeletonLoader(height: 14, width: 180),
-                    ],
-                  )
-                else if (text.isNotEmpty)
-                  isUser 
-                    ? Text(
-                        text,
-                        style: const TextStyle(
-                          fontSize: 14, 
-                          color: AppColors.textWhite, 
-                          height: 1.4, 
-                          fontWeight: FontWeight.normal
-                        ),
-                      )
-                    : MarkdownBody(
-                        data: text,
-                        styleSheet: MarkdownStyleSheet(
-                          p: const TextStyle(fontSize: 14, color: AppColors.textDark, height: 1.4, fontWeight: FontWeight.w500),
-                          pPadding: const EdgeInsets.only(bottom: 8),
-                          listBullet: const TextStyle(color: AppColors.textDark),
-                          listBulletPadding: const EdgeInsets.only(right: 8),
-                          strong: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold),
-                          blockSpacing: 12.0,
+                      if (imagePath != null)
+                        ChatBubbleImage(imagePath: imagePath!),
+                      if (filePath != null)
+                        ChatBubbleFile(filePath: filePath!, isUser: isUser),
+                      if (isLoading)
+                        const ChatBubbleLoader()
+                      else
+                        ChatBubbleText(text: text, isUser: isUser),
+                      const SizedBox(height: 8),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          time,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: isUser
+                                ? AppColors.textWhite
+                                : AppColors.textGrey,
+                          ),
                         ),
                       ),
-                const SizedBox(height: 8),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Text(
-                    time,
-                    style: TextStyle(fontSize: 10, color: isUser ? AppColors.textWhite : AppColors.textGrey),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-           ),
           ),
-         ),
         ),
-      ),
-        
+
         if (isUser) ...[
           const SizedBox(width: 8),
           Container(
@@ -147,7 +107,7 @@ class ChatBubble extends StatelessWidget {
               color: AppColors.borderGrey,
               shape: BoxShape.circle,
               image: DecorationImage(
-                image: AssetImage('assets/doctor.png'), 
+                image: AssetImage('assets/doctor.png'),
                 fit: BoxFit.cover,
                 alignment: Alignment.topCenter,
               ),

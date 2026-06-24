@@ -1,9 +1,13 @@
+import '../../../../core/constants/app_strings.dart';
+import '../../../../core/utils/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../core/theme/app_colors.dart';
 
 class CheckoutBottomSheet extends StatelessWidget {
-  const CheckoutBottomSheet({super.key});
+  final double grandTotal;
+
+  const CheckoutBottomSheet({super.key, required this.grandTotal});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +20,7 @@ class CheckoutBottomSheet extends StatelessWidget {
             color: AppColors.shadowColor,
             blurRadius: 10,
             offset: const Offset(0, -4),
-          )
+          ),
         ],
       ),
       child: SafeArea(
@@ -26,14 +30,14 @@ class CheckoutBottomSheet extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
+              children: [
+                const Text(
                   'Total Pembayaran',
                   style: TextStyle(color: AppColors.textGrey, fontSize: 12),
                 ),
                 Text(
-                  'Rp 50.000',
-                  style: TextStyle(
+                  'Rp ${grandTotal.toInt()}',
+                  style: const TextStyle(
                     color: AppColors.primary,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -43,15 +47,16 @@ class CheckoutBottomSheet extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar(); 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Pesanan berhasil dibuat!')),
-                );
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                CustomSnackbar.showSuccess(context, AppStrings.extPesananberhasildibuat);
                 context.go('/pharmacy/tracking');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 14,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

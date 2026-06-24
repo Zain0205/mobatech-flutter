@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/error_handler.dart';
 
 import '../controllers/emergency_controller.dart';
+import '../controllers/emergency_state.dart';
 import '../widgets/emergency_form_view.dart';
 import '../widgets/emergency_dispatching_view.dart';
 import '../widgets/emergency_tracking_view.dart';
@@ -30,7 +31,9 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => ref.read(emergencyControllerProvider.notifier).detectLocation());
+    Future.microtask(
+      () => ref.read(emergencyControllerProvider.notifier).detectLocation(),
+    );
   }
 
   @override
@@ -44,20 +47,27 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     try {
-      await ref.read(emergencyControllerProvider.notifier).submitRequest(
-        _patientNameController.text,
-        _conditionController.text,
-        _phoneController.text,
-      );
+      await ref
+          .read(emergencyControllerProvider.notifier)
+          .submitRequest(
+            _patientNameController.text,
+            _conditionController.text,
+            _phoneController.text,
+          );
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(
-            content: Text(ErrorHandler.getMessage(e), style: const TextStyle(color: Colors.white)),
-            backgroundColor: AppColors.errorRed,
-            behavior: SnackBarBehavior.floating,
-          ));
+          ..showSnackBar(
+            SnackBar(
+              content: Text(
+                ErrorHandler.getMessage(e),
+                style: const TextStyle(color: AppColors.backgroundWhite),
+              ),
+              backgroundColor: AppColors.errorRed,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
       }
     }
   }
@@ -70,10 +80,8 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen> {
       backgroundColor: AppColors.backgroundScreen,
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 500),
-        transitionBuilder: (child, animation) => FadeTransition(
-          opacity: animation,
-          child: child,
-        ),
+        transitionBuilder: (child, animation) =>
+            FadeTransition(opacity: animation, child: child),
         child: _buildCurrentState(state),
       ),
     );
@@ -93,7 +101,9 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen> {
           locationError: state.locationError,
           formMapController: _formMapController,
           isLoading: state.isLoading,
-          onDetectLocation: ref.read(emergencyControllerProvider.notifier).detectLocation,
+          onDetectLocation: ref
+              .read(emergencyControllerProvider.notifier)
+              .detectLocation,
           onSubmit: _submit,
         );
       case EmergencyStatus.dispatching:

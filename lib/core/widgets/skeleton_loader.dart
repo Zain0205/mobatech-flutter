@@ -38,7 +38,7 @@ class SkeletonLoader extends StatelessWidget {
 
 class CardSkeletonLoader extends StatelessWidget {
   final int count;
-  
+
   const CardSkeletonLoader({super.key, this.count = 3});
 
   @override
@@ -62,7 +62,7 @@ class CardSkeletonLoader extends StatelessWidget {
 
 class GridSkeletonLoader extends StatelessWidget {
   final int count;
-  
+
   const GridSkeletonLoader({super.key, this.count = 8});
 
   @override

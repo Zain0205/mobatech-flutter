@@ -46,7 +46,9 @@ class Polyclinic {
 
   factory Polyclinic.fromJson(Map<String, dynamic> json) {
     var list = json['schedules'] as List? ?? [];
-    List<PolyclinicSchedule> schedulesList = list.map((i) => PolyclinicSchedule.fromJson(i)).toList();
+    List<PolyclinicSchedule> schedulesList = list
+        .map((i) => PolyclinicSchedule.fromJson(i))
+        .toList();
 
     return Polyclinic(
       id: json['ID'] ?? 0,

@@ -54,10 +54,7 @@ class DoctorDetailContent extends StatelessWidget {
             ),
           ),
         ),
-        BookingBottomBar(
-          isBooking: isBooking,
-          onBook: onBook,
-        ),
+        BookingBottomBar(isBooking: isBooking, onBook: onBook),
       ],
     );
   }

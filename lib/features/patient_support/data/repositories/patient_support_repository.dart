@@ -9,8 +9,8 @@ class PatientSupportRepository {
   Future<List<MedicalResult>> getMedicalResults() async {
     try {
       final response = await _dio.get('/medical-results');
-      if (response.data['data'] != null) {
-        return (response.data['data'] as List)
+      if (response.data != null) {
+        return (response.data as List)
             .map((e) => MedicalResult.fromJson(e))
             .toList();
       }
@@ -41,8 +41,8 @@ class PatientSupportRepository {
   Future<List<Reminder>> getReminders() async {
     try {
       final response = await _dio.get('/reminders');
-      if (response.data['data'] != null) {
-        return (response.data['data'] as List)
+      if (response.data != null) {
+        return (response.data as List)
             .map((e) => Reminder.fromJson(e))
             .toList();
       }
@@ -81,7 +81,7 @@ class PatientSupportRepository {
   Future<int> getUnreadReminderCount() async {
     try {
       final response = await _dio.get('/reminders/unread-count');
-      return response.data['data']['count'] ?? 0;
+      return response.data['count'] ?? 0;
     } catch (e) {
       return 1; // Dummy value
     }

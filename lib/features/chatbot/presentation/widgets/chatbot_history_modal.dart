@@ -13,17 +13,21 @@ class ChatbotHistoryModal extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionsAsync = ref.watch(chatSessionsProvider);
-    
+
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: Container(
         padding: const EdgeInsets.all(20),
         height: MediaQuery.of(context).size.height * 0.6,
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.85),
+          color: AppColors.backgroundWhite.withValues(alpha: 0.85),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, -5))
+            BoxShadow(
+              color: AppColors.textDark.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, -5),
+            ),
           ],
         ),
         child: Column(
@@ -32,54 +36,91 @@ class ChatbotHistoryModal extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(AppStrings.chatHistoryTitle, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+                const Text(
+                  AppStrings.chatHistoryTitle,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
               ],
             ),
             const Divider(),
             Expanded(
               child: sessionsAsync.when(
                 data: (sessions) {
-                  if (sessions.isEmpty) return const Center(child: Text(AppStrings.chatNoHistory, style: TextStyle(color: AppColors.textGrey)));
+                  if (sessions.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        AppStrings.chatNoHistory,
+                        style: TextStyle(color: AppColors.textGrey),
+                      ),
+                    );
+                  }
                   return ListView.builder(
                     itemCount: sessions.length,
                     itemBuilder: (context, index) {
                       final session = sessions[index];
                       return Card(
                         elevation: 0,
-                        color: Colors.transparent,
+                        color: AppColors.transparent,
                         margin: const EdgeInsets.only(bottom: 8),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Colors.grey.withValues(alpha: 0.2))),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(
+                            color: AppColors.textGrey.withValues(alpha: 0.2),
+                          ),
+                        ),
                         child: Material(
-                          color: Colors.white.withValues(alpha: 0.5),
+                          color: AppColors.backgroundWhite.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12),
                           child: InkWell(
                             onTap: () {
-                              ref.read(chatMessagesProvider.notifier).loadSession(session['ID']);
+                              ref
+                                  .read(chatMessagesProvider.notifier)
+                                  .loadSession(session['ID']);
                               Navigator.pop(context);
                             },
                             borderRadius: BorderRadius.circular(12),
                             child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 4,
+                              ),
                               leading: const CircleAvatar(
                                 backgroundColor: AppColors.primaryLight,
-                                child: Icon(Icons.chat_bubble_outline, color: AppColors.primary, size: 20),
+                                child: Icon(
+                                  Icons.chat_bubble_outline,
+                                  color: AppColors.primary,
+                                  size: 20,
+                                ),
                               ),
                               title: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      session['title'] ?? AppStrings.chatNewConversation,
+                                      session['title'] ??
+                                          AppStrings.chatNewConversation,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                      ),
                                     ),
                                   ),
                                   IconButton(
-                                    icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                                    icon: const Icon(
+                                      Icons.delete_outline,
+                                      color: AppColors.errorRed,
+                                      size: 20,
+                                    ),
                                     padding: EdgeInsets.zero,
                                     constraints: const BoxConstraints(),
-                                    onPressed: () => ref.read(chatMessagesProvider.notifier).deleteSession(session['ID']),
+                                    onPressed: () => ref
+                                        .read(chatMessagesProvider.notifier)
+                                        .deleteSession(session['ID']),
                                   ),
                                 ],
                               ),
@@ -91,7 +132,8 @@ class ChatbotHistoryModal extends ConsumerWidget {
                   );
                 },
                 loading: () => const CardSkeletonLoader(count: 3),
-                error: (err, stack) => Center(child: Text(ErrorHandler.getMessage(err))),
+                error: (err, stack) =>
+                    Center(child: Text(ErrorHandler.getMessage(err))),
               ),
             ),
           ],

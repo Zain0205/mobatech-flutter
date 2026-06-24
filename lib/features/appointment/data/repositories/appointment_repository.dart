@@ -12,11 +12,14 @@ class AppointmentRepository {
     try {
       final response = await _dio.get(
         '/doctors',
-        queryParameters: specialization != null && specialization.isNotEmpty && specialization != 'All'
+        queryParameters:
+            specialization != null &&
+                specialization.isNotEmpty &&
+                specialization != 'All'
             ? {'specialization': specialization}
             : null,
       );
-      final List<dynamic> data = response.data['data'] ?? [];
+      final List<dynamic> data = response.data ?? [];
       return data.map((json) => Doctor.fromJson(json)).toList();
     } catch (e) {
       rethrow;
@@ -26,7 +29,7 @@ class AppointmentRepository {
   Future<Doctor> getDoctorById(int id) async {
     try {
       final response = await _dio.get('/doctors/$id');
-      return Doctor.fromJson(response.data['data']);
+      return Doctor.fromJson(response.data);
     } catch (e) {
       rethrow;
     }
@@ -35,7 +38,7 @@ class AppointmentRepository {
   Future<List<DoctorSchedule>> getDoctorSchedules(int id) async {
     try {
       final response = await _dio.get('/doctors/$id/schedules');
-      final List<dynamic> data = response.data['data'] ?? [];
+      final List<dynamic> data = response.data ?? [];
       return data.map((json) => DoctorSchedule.fromJson(json)).toList();
     } catch (e) {
       rethrow;
@@ -45,7 +48,7 @@ class AppointmentRepository {
   Future<List<Appointment>> getUserAppointments() async {
     try {
       final response = await _dio.get('/appointments');
-      final List<dynamic> data = response.data['data'] ?? [];
+      final List<dynamic> data = response.data ?? [];
       return data.map((json) => Appointment.fromJson(json)).toList();
     } catch (e) {
       rethrow;
@@ -54,11 +57,11 @@ class AppointmentRepository {
 
   Future<Appointment> bookAppointment(int scheduleId, String symptoms) async {
     try {
-      final response = await _dio.post('/appointments', data: {
-        'doctor_schedule_id': scheduleId,
-        'notes': symptoms,
-      });
-      return Appointment.fromJson(response.data['data']);
+      final response = await _dio.post(
+        '/appointments',
+        data: {'doctor_schedule_id': scheduleId, 'notes': symptoms},
+      );
+      return Appointment.fromJson(response.data);
     } catch (e) {
       rethrow;
     }

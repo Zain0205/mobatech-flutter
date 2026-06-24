@@ -26,7 +26,7 @@ class OrderTrackingHeader extends StatelessWidget {
             color: AppColors.shadowColor,
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Column(
@@ -49,7 +49,10 @@ class OrderTrackingHeader extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.primaryLight,
                   borderRadius: BorderRadius.circular(12),
@@ -66,7 +69,10 @@ class OrderTrackingHeader extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Text('Tgl Pemesanan: ${order?.date ?? "Hari ini"}', style: const TextStyle(color: AppColors.textGrey)),
+          Text(
+            'Tgl Pemesanan: ${order?.date ?? "Hari ini"}',
+            style: const TextStyle(color: AppColors.textGrey),
+          ),
         ],
       ),
     );

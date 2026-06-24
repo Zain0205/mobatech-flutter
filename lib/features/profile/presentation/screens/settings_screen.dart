@@ -1,7 +1,11 @@
-import 'dart:ui';
+import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../widgets/settings_widgets.dart';
+
+part 'settings_screen_parts.dart';
+
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -39,32 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundScreen,
-      appBar: AppBar(
-        title: const Text('Pengaturan', style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold)),
-        backgroundColor: AppColors.primary,
-        centerTitle: true,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
-        ),
-        flexibleSpace: ClipRRect(
-          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Positioned(
-                right: -20,
-                top: -20,
-                child: Opacity(
-                  opacity: 0.4,
-                  child: Image.asset('assets/header_logo.png', width: 220),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: const SettingsAppBar(),
       body: TweenAnimationBuilder<double>(
         tween: Tween(begin: 0.0, end: 1.0),
         duration: const Duration(milliseconds: 500),
@@ -83,142 +62,74 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: ListView(
               padding: const EdgeInsets.all(24),
               physics: const BouncingScrollPhysics(),
-          children: [
-            _buildSectionHeader('Notifikasi'),
-            const SizedBox(height: 16),
-            _buildSettingsContainer([
-              _buildSwitchItem('Push Notification', 'Dapatkan update langsung', _notifPush, (v) {
-                setState(() => _notifPush = v);
-                _saveSetting('setting_notif_push', v);
-              }),
-              _buildSwitchItem('Email Notification', 'Dapatkan info promo & berita', _notifEmail, (v) {
-                setState(() => _notifEmail = v);
-                _saveSetting('setting_notif_email', v);
-              }),
-            ]),
-            const SizedBox(height: 24),
-            _buildSectionHeader('Keamanan'),
-            const SizedBox(height: 16),
-            _buildSettingsContainer([
-              _buildSwitchItem('Face ID / Biometrik', 'Login lebih cepat', _faceId, (v) {
-                setState(() => _faceId = v);
-                _saveSetting('setting_face_id', v);
-              }),
-              _buildActionItem('Ubah Password', Icons.lock_outline),
-              _buildActionItem('Ubah PIN Transaksi', Icons.pin_outlined),
-            ]),
-            const SizedBox(height: 24),
-            _buildSectionHeader('Preferensi'),
-            const SizedBox(height: 16),
-            _buildSettingsContainer([
-              _buildActionItem('Bahasa', Icons.language, trailingText: 'Indonesia'),
-              _buildActionItem('Tema', Icons.brightness_4_outlined, trailingText: 'Sistem'),
-            ]),
-          ],
-        ),
-       ),
-      ),
-     ),
-    );
-  }
-
-  Widget _buildSectionHeader(String title) {
-    return Text(
-      title,
-      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textGrey),
-    );
-  }
-
-  Widget _buildSettingsContainer(List<Widget> children) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
-        boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4)),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Column(
-            children: children.asMap().entries.map((entry) {
-              final idx = entry.key;
-              final child = entry.value;
-              if (idx < children.length - 1) {
-                return Column(
-                  children: [
-                    child,
-                    const Divider(height: 1, indent: 16, endIndent: 16),
-                  ],
-                );
-              }
-              return child;
-            }).toList(),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSwitchItem(String title, String subtitle, bool value, Function(bool) onChanged) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-                const SizedBox(height: 2),
-                Text(subtitle, style: const TextStyle(fontSize: 12, color: AppColors.textGrey)),
+                SectionHeader(title: 'Notifikasi'),
+                const SizedBox(height: 16),
+                SettingsContainer(
+                  children: [
+                    SwitchItem(
+                      title: 'Push Notification',
+                      subtitle: 'Dapatkan update langsung',
+                      value: _notifPush,
+                      onChanged: (v) {
+                        setState(() => _notifPush = v);
+                        _saveSetting('setting_notif_push', v);
+                      },
+                    ),
+                    SwitchItem(
+                      title: 'Email Notification',
+                      subtitle: 'Dapatkan info promo & berita',
+                      value: _notifEmail,
+                      onChanged: (v) {
+                        setState(() => _notifEmail = v);
+                        _saveSetting('setting_notif_email', v);
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                SectionHeader(title: 'Keamanan'),
+                const SizedBox(height: 16),
+                SettingsContainer(
+                  children: [
+                    SwitchItem(
+                      title: 'Face ID / Biometrik',
+                      subtitle: 'Login lebih cepat',
+                      value: _faceId,
+                      onChanged: (v) {
+                        setState(() => _faceId = v);
+                        _saveSetting('setting_face_id', v);
+                      },
+                    ),
+                    const ActionItem(
+                      title: 'Ubah Password',
+                      icon: Icons.lock_outline,
+                    ),
+                    const ActionItem(
+                      title: 'Ubah PIN Transaksi',
+                      icon: Icons.pin_outlined,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                SectionHeader(title: 'Preferensi'),
+                const SizedBox(height: 16),
+                const SettingsContainer(
+                  children: [
+                    ActionItem(
+                      title: 'Bahasa',
+                      icon: Icons.language,
+                      trailingText: 'Indonesia',
+                    ),
+                    ActionItem(
+                      title: 'Tema',
+                      icon: Icons.brightness_4_outlined,
+                      trailingText: 'Sistem',
+                    ),
+                  ],
+                ),
               ],
             ),
-          ),
-          Switch(
-            value: value,
-            onChanged: onChanged,
-            activeThumbColor: AppColors.primary,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionItem(String title, IconData icon, {String? trailingText}) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          ScaffoldMessenger.of(context).hideCurrentSnackBar(); ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Fitur "$title" belum tersedia di versi ini.', style: const TextStyle(color: Colors.white)),
-              backgroundColor: Colors.black87,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-          );
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Row(
-            children: [
-              Icon(icon, color: AppColors.primary, size: 24),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-              ),
-              if (trailingText != null) ...[
-                Text(trailingText, style: const TextStyle(fontSize: 14, color: AppColors.textGrey)),
-                const SizedBox(width: 8),
-              ],
-              const Icon(Icons.chevron_right, color: AppColors.iconGrey),
-            ],
           ),
         ),
       ),

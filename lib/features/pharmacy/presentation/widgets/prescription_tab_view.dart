@@ -30,7 +30,11 @@ class PrescriptionTabView extends ConsumerWidget {
                 color: AppColors.backgroundWhite,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
-                  BoxShadow(color: AppColors.shadowColor, blurRadius: 10, offset: const Offset(0, 4)),
+                  BoxShadow(
+                    color: AppColors.shadowColor,
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
                 ],
               ),
               child: Column(
@@ -41,31 +45,65 @@ class PrescriptionTabView extends ConsumerWidget {
                     children: [
                       Text(
                         prescription.doctorName,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textDark),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: AppColors.textDark,
+                        ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(color: AppColors.primaryLight, borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryLight,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         child: Text(
                           prescription.status,
-                          style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            color: AppColors.primary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text('${AppStrings.diagnosisPrefix}${prescription.diagnosis}', style: const TextStyle(color: AppColors.textGrey, fontSize: 14)),
+                  Text(
+                    '${AppStrings.diagnosisPrefix}${prescription.diagnosis}',
+                    style: const TextStyle(
+                      color: AppColors.textGrey,
+                      fontSize: 14,
+                    ),
+                  ),
                   const Divider(height: 24, color: AppColors.dividerGrey),
-                  ...prescription.items.map((item) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('${item.medicine.name} (${item.quantity})', style: const TextStyle(color: AppColors.textDark, fontSize: 14)),
-                            Text(item.dosage, style: const TextStyle(color: AppColors.textGrey, fontSize: 12)),
-                          ],
-                        ),
-                      )),
+                  ...prescription.items.map(
+                    (item) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${item.medicine.name} (${item.quantity})',
+                            style: const TextStyle(
+                              color: AppColors.textDark,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Text(
+                            item.dosage,
+                            style: const TextStyle(
+                              color: AppColors.textGrey,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
@@ -73,13 +111,22 @@ class PrescriptionTabView extends ConsumerWidget {
                       onPressed: () => context.push('/pharmacy/checkout'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         elevation: 0,
                       ),
-                      child: const Text(AppStrings.redeemMedicine, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textWhite)),
+                      child: const Text(
+                        AppStrings.redeemMedicine,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: AppColors.textWhite,
+                        ),
+                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
             );
@@ -90,9 +137,14 @@ class PrescriptionTabView extends ConsumerWidget {
         padding: const EdgeInsets.all(16.0),
         itemCount: 3,
         separatorBuilder: (context, index) => const SizedBox(height: 16),
-        itemBuilder: (context, index) => const ShimmerLoading(width: double.infinity, height: 180, borderRadius: 16),
+        itemBuilder: (context, index) => const ShimmerLoading(
+          width: double.infinity,
+          height: 180,
+          borderRadius: 16,
+        ),
       ),
-      error: (err, stack) => const Center(child: Text(AppStrings.errorLoadPrescriptions)),
+      error: (err, stack) =>
+          const Center(child: Text(AppStrings.errorLoadPrescriptions)),
     );
   }
 }

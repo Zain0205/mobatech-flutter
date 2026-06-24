@@ -41,8 +41,9 @@ class _PulsingLocationDotState extends State<PulsingLocationDot>
               height: 50 * _controller.value,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.errorRed
-                    .withAlpha((80 * (1 - _controller.value)).toInt()),
+                color: AppColors.errorRed.withAlpha(
+                  (80 * (1 - _controller.value)).toInt(),
+                ),
               ),
             ),
             // Inner dot
@@ -52,7 +53,7 @@ class _PulsingLocationDotState extends State<PulsingLocationDot>
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: AppColors.errorRed,
-                border: Border.all(color: Colors.white, width: 3),
+                border: Border.all(color: AppColors.backgroundWhite, width: 3),
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.errorRed.withAlpha(80),

@@ -1,3 +1,4 @@
+import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +17,8 @@ class SearchScreen extends ConsumerStatefulWidget {
   ConsumerState<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends ConsumerState<SearchScreen> with SingleTickerProviderStateMixin {
+class _SearchScreenState extends ConsumerState<SearchScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
 
@@ -64,28 +66,42 @@ class _SearchScreenState extends ConsumerState<SearchScreen> with SingleTickerPr
           icon: const Icon(Icons.arrow_back, color: AppColors.textWhite),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Hasil Pencarian', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+        title: Text(
+          AppStrings.extHasilpencarian,
+          style: TextStyle(
+            color: AppColors.backgroundWhite,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(100),
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 4.0,
+                ),
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: AppColors.backgroundWhite.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: TextField(
                     controller: _searchController,
                     autofocus: true,
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                    style: const TextStyle(color: AppColors.backgroundWhite, fontSize: 14),
                     decoration: const InputDecoration(
                       hintText: 'Cari Dokter, Layanan, Agenda...',
-                      hintStyle: TextStyle(color: Colors.white70, fontSize: 13),
+                      hintStyle: TextStyle(color: AppColors.textWhite70, fontSize: 13),
                       border: InputBorder.none,
-                      prefixIcon: Icon(Icons.search, color: Colors.white70, size: 18),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: AppColors.textWhite70,
+                        size: 18,
+                      ),
                       contentPadding: EdgeInsets.symmetric(vertical: 10),
                     ),
                     onChanged: (val) {
@@ -96,13 +112,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> with SingleTickerPr
               ),
               TabBar(
                 controller: _tabController,
-                indicatorColor: Colors.white,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.white70,
+                indicatorColor: AppColors.backgroundWhite,
+                labelColor: AppColors.backgroundWhite,
+                unselectedLabelColor: AppColors.textWhite70,
                 isScrollable: false,
                 labelPadding: EdgeInsets.zero,
-                dividerColor: Colors.transparent,
-                labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                dividerColor: AppColors.transparent,
+                labelStyle: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
                 unselectedLabelStyle: const TextStyle(fontSize: 13),
                 tabs: const [
                   Tab(text: 'Semua'),

@@ -1,3 +1,4 @@
+import '../../../../core/constants/app_strings.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -25,7 +26,7 @@ class HospitalCard extends StatelessWidget {
             color: AppColors.shadowColor.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: ClipRRect(
@@ -33,7 +34,7 @@ class HospitalCard extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
-            color: Colors.white.withValues(alpha: 0.85),
+            color: AppColors.backgroundWhite.withValues(alpha: 0.85),
             padding: const EdgeInsets.all(16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,16 +58,31 @@ class HospitalCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                               name,
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textDark),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: AppColors.textDark,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Row(
                             children: [
-                              const Icon(Icons.location_on_outlined, color: AppColors.primary, size: 16),
+                              const Icon(
+                                Icons.location_on_outlined,
+                                color: AppColors.primary,
+                                size: 16,
+                              ),
                               const SizedBox(width: 4),
-                              Text(distance, style: const TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.bold)),
+                              Text(
+                                distance,
+                                style: const TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -74,7 +90,10 @@ class HospitalCard extends StatelessWidget {
                       const SizedBox(height: 6),
                       Text(
                         address,
-                        style: const TextStyle(fontSize: 12, color: AppColors.textGrey),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textGrey,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -94,13 +113,25 @@ class HospitalCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.borderGrey.withValues(alpha: 0.5)),
+                        border: Border.all(
+                          color: AppColors.borderGrey.withValues(alpha: 0.5),
+                        ),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(Icons.directions_outlined, color: AppColors.primary, size: 20),
+                      child: const Icon(
+                        Icons.directions_outlined,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
                     ),
                     const SizedBox(height: 4),
-                    const Text('Rute', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                    Text(
+                      AppStrings.extRute,
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(width: 12),
@@ -110,13 +141,25 @@ class HospitalCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.borderGrey.withValues(alpha: 0.5)),
+                        border: Border.all(
+                          color: AppColors.borderGrey.withValues(alpha: 0.5),
+                        ),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(Icons.more_vert, color: AppColors.primary, size: 20),
+                      child: const Icon(
+                        Icons.more_vert,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
                     ),
                     const SizedBox(height: 4),
-                    const Text('More', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                    Text(
+                      AppStrings.extMore,
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ],

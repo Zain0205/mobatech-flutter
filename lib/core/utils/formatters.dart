@@ -4,7 +4,7 @@ class Formatters {
   static String formatPhoneNumber(String phone) {
     // Clean all non-digit characters except the leading plus
     String cleanPhone = phone.replaceAll(RegExp(r'[^\d+]'), '');
-    
+
     // If it doesn't start with +62, but starts with 0 or 62, normalize it to +62
     if (!cleanPhone.startsWith('+62')) {
       if (cleanPhone.startsWith('62')) {
@@ -20,7 +20,7 @@ class Formatters {
       if (localPart.length > 3) {
         String p1 = localPart.substring(0, 3); // 812
         String remainder = localPart.substring(3); // 34567890
-        
+
         if (remainder.length > 4) {
           String p2 = remainder.substring(0, 4); // 3456
           String p3 = remainder.substring(4); // 7890
@@ -38,9 +38,12 @@ class Formatters {
 
 class PhonePrefixFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     String text = newValue.text;
-    
+
     // First strip all non-digits except +
     text = text.replaceAll(RegExp(r'[^\d+]'), '');
 

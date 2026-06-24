@@ -13,12 +13,12 @@ class DoctorDetailAppBar extends StatelessWidget
         'Detail Dokter',
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: Colors.white,
+          color: AppColors.backgroundWhite,
           fontSize: 18,
         ),
       ),
       backgroundColor: AppColors.primary,
-      iconTheme: const IconThemeData(color: Colors.white),
+      iconTheme: const IconThemeData(color: AppColors.backgroundWhite),
       centerTitle: true,
       elevation: 0,
       shape: const RoundedRectangleBorder(

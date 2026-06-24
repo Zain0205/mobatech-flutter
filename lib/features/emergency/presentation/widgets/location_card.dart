@@ -2,12 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/widgets/skeleton_loader.dart';
-import 'pulsing_location_dot.dart';
+import 'location_card_map_preview.dart';
 
 class LocationCard extends StatelessWidget {
   final double? userLat;
@@ -49,10 +47,18 @@ class LocationCard extends StatelessWidget {
             child: Column(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(16),
+                  ),
                   child: SizedBox(
                     height: 180,
-                    child: _buildMapPreview(),
+                    child: LocationCardMapPreview(
+                      isLocating: isLocating,
+                      locationError: locationError,
+                      userLat: userLat,
+                      userLng: userLng,
+                      mapController: formMapController,
+                    ),
                   ),
                 ),
                 Padding(
@@ -68,8 +74,12 @@ class LocationCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
-                          userLat != null ? Icons.location_on : Icons.location_searching,
-                          color: userLat != null ? AppColors.successGreen : AppColors.errorRed,
+                          userLat != null
+                              ? Icons.location_on
+                              : Icons.location_searching,
+                          color: userLat != null
+                              ? AppColors.successGreen
+                              : AppColors.errorRed,
                           size: 22,
                         ),
                       ),
@@ -82,22 +92,27 @@ class LocationCard extends StatelessWidget {
                               isLocating
                                   ? AppStrings.detectingLocation
                                   : locationError != null
-                                      ? AppStrings.detectFailed
-                                      : AppStrings.locationDetected,
+                                  ? AppStrings.detectFailed
+                                  : AppStrings.locationDetected,
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color: locationError != null ? AppColors.errorRed : AppColors.textDark,
+                                color: locationError != null
+                                    ? AppColors.errorRed
+                                    : AppColors.textDark,
                               ),
                             ),
                             const SizedBox(height: 2),
                             Text(
                               isLocating
                                   ? AppStrings.usingGps
-                                  : locationError ?? '${userLat?.toStringAsFixed(6)}, ${userLng?.toStringAsFixed(6)}',
+                                  : locationError ??
+                                        '${userLat?.toStringAsFixed(6)}, ${userLng?.toStringAsFixed(6)}',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: locationError != null ? AppColors.errorRed : AppColors.textGrey,
+                                color: locationError != null
+                                    ? AppColors.errorRed
+                                    : AppColors.textGrey,
                               ),
                             ),
                           ],
@@ -108,7 +123,9 @@ class LocationCard extends StatelessWidget {
                           onPressed: isLocating ? null : onDetectLocation,
                           icon: Icon(
                             Icons.refresh,
-                            color: isLocating ? AppColors.textLightGrey : AppColors.primary,
+                            color: isLocating
+                                ? AppColors.textLightGrey
+                                : AppColors.primary,
                           ),
                         ),
                     ],
@@ -120,44 +137,5 @@ class LocationCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildMapPreview() {
-    if (isLocating) {
-      return Container(
-        color: AppColors.backgroundLightGrey,
-        child: const SkeletonLoader(width: double.infinity, height: double.infinity, borderRadius: 0),
-      );
-    }
-    if (locationError != null) {
-      return Container(
-        color: AppColors.backgroundLightGrey,
-        child: const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.location_off, size: 36, color: AppColors.textLightGrey),
-              SizedBox(height: 8),
-              Text(AppStrings.locationUnavailable, style: TextStyle(color: AppColors.textGrey, fontSize: 13)),
-            ],
-          ),
-        ),
-      );
-    }
-    if (userLat != null && userLng != null) {
-      return FlutterMap(
-        mapController: formMapController,
-        options: MapOptions(
-          initialCenter: LatLng(userLat!, userLng!),
-          initialZoom: 16.0,
-          interactionOptions: const InteractionOptions(flags: InteractiveFlag.none),
-        ),
-        children: [
-          TileLayer(urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', userAgentPackageName: 'com.mobatech.app'),
-          MarkerLayer(markers: [Marker(point: LatLng(userLat!, userLng!), width: 50, height: 50, child: const PulsingLocationDot())]),
-        ],
-      );
-    }
-    return Container(color: AppColors.backgroundLightGrey);
   }
 }

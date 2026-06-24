@@ -15,11 +15,19 @@ class CheckoutPaymentMethod extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildPaymentOption('Transfer Bank', 'Transfer', Icons.account_balance_outlined),
+        _buildPaymentOption(
+          'Transfer Bank',
+          'Transfer',
+          Icons.account_balance_outlined,
+        ),
         const SizedBox(height: 12),
         _buildPaymentOption('Tunai (Cash)', 'Cash', Icons.money_outlined),
         const SizedBox(height: 12),
-        _buildPaymentOption('BPJS Kesehatan', 'BPJS', Icons.health_and_safety_outlined),
+        _buildPaymentOption(
+          'BPJS Kesehatan',
+          'BPJS',
+          Icons.health_and_safety_outlined,
+        ),
       ],
     );
   }
@@ -40,7 +48,10 @@ class CheckoutPaymentMethod extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, color: isSelected ? AppColors.primary : AppColors.iconGrey),
+            Icon(
+              icon,
+              color: isSelected ? AppColors.primary : AppColors.iconGrey,
+            ),
             const SizedBox(width: 16),
             Expanded(
               child: Text(
@@ -51,7 +62,8 @@ class CheckoutPaymentMethod extends StatelessWidget {
                 ),
               ),
             ),
-            if (isSelected) const Icon(Icons.check_circle, color: AppColors.primary),
+            if (isSelected)
+              const Icon(Icons.check_circle, color: AppColors.primary),
           ],
         ),
       ),

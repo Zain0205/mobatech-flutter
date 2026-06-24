@@ -16,7 +16,13 @@ class HistoryScreen extends ConsumerWidget {
       child: Scaffold(
         backgroundColor: AppColors.backgroundScreen,
         appBar: AppBar(
-          title: const Text(AppStrings.historyTitle, style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold)),
+          title: const Text(
+            AppStrings.historyTitle,
+            style: TextStyle(
+              color: AppColors.textWhite,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           backgroundColor: AppColors.primary,
           elevation: 0,
           centerTitle: true,
@@ -25,7 +31,9 @@ class HistoryScreen extends ConsumerWidget {
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
           ),
           flexibleSpace: ClipRRect(
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
@@ -63,12 +71,7 @@ class HistoryScreen extends ConsumerWidget {
               ),
             );
           },
-          child: const TabBarView(
-            children: [
-              AppointmentsTab(),
-              PharmacyTab(),
-            ],
-          ),
+          child: const TabBarView(children: [AppointmentsTab(), PharmacyTab()]),
         ),
         bottomNavigationBar: const CustomBottomNavBar(currentIndex: 3),
       ),

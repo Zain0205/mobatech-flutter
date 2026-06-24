@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/theme/app_colors.dart';
+import 'tracking_info_widgets.dart';
 
 class TrackingInfoSheet extends StatelessWidget {
   final int estimatedMinutes;
 
-  const TrackingInfoSheet({
-    super.key,
-    required this.estimatedMinutes,
-  });
+  const TrackingInfoSheet({super.key, required this.estimatedMinutes});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(30),
+            color: AppColors.textDark.withAlpha(30),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -42,50 +40,7 @@ class TrackingInfoSheet extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
             child: Row(
               children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        AppColors.ambulanceBlue,
-                        AppColors.ambulanceBlueDark,
-                      ],
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.ambulanceBlue.withAlpha(80),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '$estimatedMinutes',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w900,
-                          height: 1,
-                        ),
-                      ),
-                      const Text(
-                        AppStrings.min,
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                EstimatedTimeCircle(estimatedMinutes: estimatedMinutes),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -118,75 +73,7 @@ class TrackingInfoSheet extends StatelessWidget {
 
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-            child: Row(
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withAlpha(25),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.person, color: AppColors.primary, size: 26),
-                ),
-                const SizedBox(width: 14),
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        AppStrings.driverName,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textDark,
-                        ),
-                      ),
-                      SizedBox(height: 2),
-                      Text(
-                        AppStrings.driverDetails,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textGrey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.successGreen,
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.successGreen.withAlpha(80),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(14),
-                      onTap: () {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(AppStrings.contactingDriver),
-                            backgroundColor: AppColors.primary,
-                          ),
-                        );
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: Icon(Icons.phone, color: Colors.white, size: 22),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            child: Row(children: [const DriverInfoRow()]),
           ),
 
           SizedBox(height: MediaQuery.of(context).padding.bottom + 16),

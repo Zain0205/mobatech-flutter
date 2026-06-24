@@ -1,10 +1,17 @@
+import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../models/cart.dart';
 
 class CheckoutOrderSummary extends StatelessWidget {
   final String pickupMethod;
+  final Cart cart;
 
-  const CheckoutOrderSummary({super.key, required this.pickupMethod});
+  const CheckoutOrderSummary({
+    super.key,
+    required this.pickupMethod,
+    required this.cart,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,40 +25,55 @@ class CheckoutOrderSummary extends StatelessWidget {
             color: AppColors.shadowColor,
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text('Amoxicillin 500mg (15)', style: TextStyle(color: AppColors.textDark)),
-              Text('Rp 25.000', style: TextStyle(fontWeight: FontWeight.bold)),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text('Panadol Extra (1)', style: TextStyle(color: AppColors.textDark)),
-              Text('Rp 15.000', style: TextStyle(fontWeight: FontWeight.bold)),
-            ],
+          ...cart.items.map(
+            (item) => Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${item.medicine.name} (${item.quantity})',
+                    style: const TextStyle(color: AppColors.textDark),
+                  ),
+                  Text(
+                    'Rp ${(item.medicine.price * item.quantity).toInt()}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
           ),
           const Divider(height: 24, color: AppColors.dividerGrey),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text('Subtotal', style: TextStyle(color: AppColors.textGrey)),
-              Text('Rp 40.000', style: TextStyle(fontWeight: FontWeight.bold)),
+            children: [
+              Text(
+                AppStrings.extSubtotal,
+                style: TextStyle(color: AppColors.textGrey),
+              ),
+              Text(
+                'Rp ${cart.totalPrice.toInt()}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Ongkos Kirim', style: TextStyle(color: AppColors.textGrey)),
-              Text(pickupMethod == 'Delivery' ? 'Rp 10.000' : 'Rp 0', style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                AppStrings.extOngkoskirim,
+                style: TextStyle(color: AppColors.textGrey),
+              ),
+              Text(
+                pickupMethod == 'Delivery' ? 'Rp 10.000' : 'Rp 0',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
         ],

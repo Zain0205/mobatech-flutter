@@ -12,7 +12,10 @@ final polyclinicsProvider = FutureProvider<List<Polyclinic>>((ref) async {
   return repository.getPolyclinics();
 });
 
-final polyclinicDetailProvider = FutureProvider.family<Polyclinic, int>((ref, id) async {
+final polyclinicDetailProvider = FutureProvider.family<Polyclinic, int>((
+  ref,
+  id,
+) async {
   final repository = ref.watch(polyclinicRepositoryProvider);
   return repository.getPolyclinicById(id);
 });

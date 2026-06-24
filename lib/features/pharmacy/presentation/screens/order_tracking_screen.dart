@@ -1,3 +1,4 @@
+import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/providers/mock_ui_providers.dart';
@@ -15,14 +16,25 @@ class OrderTrackingScreen extends StatelessWidget {
     final status = order?.status ?? 'Diproses';
     final statusLower = status.toLowerCase();
 
-    bool isProcessing = statusLower.contains('proses') || statusLower.contains('verifying') || statusLower.contains('processing');
-    bool isReady = statusLower.contains('ready') || statusLower.contains('dikirim');
-    bool isCompleted = statusLower.contains('selesai') || statusLower.contains('completed');
+    bool isProcessing =
+        statusLower.contains('proses') ||
+        statusLower.contains('verifying') ||
+        statusLower.contains('processing');
+    bool isReady =
+        statusLower.contains('ready') || statusLower.contains('dikirim');
+    bool isCompleted =
+        statusLower.contains('selesai') || statusLower.contains('completed');
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLightGrey,
       appBar: AppBar(
-        title: const Text('Detail Lacak Pesanan', style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold)),
+        title: Text(
+          AppStrings.extDetaillacakpesanan,
+          style: TextStyle(
+            color: AppColors.textWhite,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
@@ -31,7 +43,9 @@ class OrderTrackingScreen extends StatelessWidget {
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
         ),
         flexibleSpace: ClipRRect(
-          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+          borderRadius: const BorderRadius.vertical(
+            bottom: Radius.circular(24),
+          ),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -51,7 +65,11 @@ class OrderTrackingScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            OrderTrackingHeader(order: order, orderTitle: orderTitle, status: status),
+            OrderTrackingHeader(
+              order: order,
+              orderTitle: orderTitle,
+              status: status,
+            ),
             const SizedBox(height: 24),
             OrderTrackingTimeline(
               isProcessing: isProcessing,

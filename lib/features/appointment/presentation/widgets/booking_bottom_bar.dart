@@ -19,7 +19,7 @@ class BookingBottomBar extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.backgroundWhite,
             boxShadow: [
               BoxShadow(
                 color: AppColors.shadowColor.withValues(alpha: 0.05),
@@ -42,13 +42,13 @@ class BookingBottomBar extends StatelessWidget {
                   elevation: 0,
                 ),
                 child: isBooking
-                    ? const CircularProgressIndicator(color: Colors.white)
+                    ? const CircularProgressIndicator(color: AppColors.backgroundWhite)
                     : const Text(
                         'Buat Janji Temu',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: AppColors.backgroundWhite,
                         ),
                       ),
               ),

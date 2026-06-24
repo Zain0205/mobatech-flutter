@@ -15,14 +15,20 @@ class ChatbotHeader extends ConsumerWidget {
       width: double.infinity,
       decoration: const BoxDecoration(
         color: AppColors.primary,
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30)),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
+        ),
       ),
       child: Stack(
         children: [
           Positioned(
             right: -20,
             top: -10,
-            child: Opacity(opacity: 0.4, child: Image.asset('assets/header_logo.png', width: 160)),
+            child: Opacity(
+              opacity: 0.4,
+              child: Image.asset('assets/header_logo.png', width: 160),
+            ),
           ),
           SafeArea(
             bottom: false,
@@ -32,8 +38,15 @@ class ChatbotHeader extends ConsumerWidget {
                 children: [
                   Container(
                     padding: const EdgeInsets.all(10),
-                    decoration: const BoxDecoration(color: AppColors.backgroundWhite, shape: BoxShape.circle),
-                    child: const Icon(Icons.smart_toy, color: AppColors.primary, size: 30),
+                    decoration: const BoxDecoration(
+                      color: AppColors.backgroundWhite,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.smart_toy,
+                      color: AppColors.primary,
+                      size: 30,
+                    ),
                   ),
                   const SizedBox(width: 16),
                   const Expanded(
@@ -41,14 +54,30 @@ class ChatbotHeader extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(AppStrings.chatHospitalName, style: TextStyle(color: AppColors.textWhite, fontSize: 20, fontWeight: FontWeight.bold)),
+                        Text(
+                          AppStrings.chatHospitalName,
+                          style: TextStyle(
+                            color: AppColors.textWhite,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         SizedBox(height: 4),
-                        Text(AppStrings.chatSubtitle, style: TextStyle(color: AppColors.textWhite, fontSize: 13)),
+                        Text(
+                          AppStrings.chatSubtitle,
+                          style: TextStyle(
+                            color: AppColors.textWhite,
+                            fontSize: 13,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.add_circle_outline, color: Colors.white),
+                    icon: const Icon(
+                      Icons.add_circle_outline,
+                      color: AppColors.backgroundWhite,
+                    ),
                     tooltip: AppStrings.chatNewTooltip,
                     onPressed: () {
                       ref.read(currentSessionIdProvider.notifier).state = null;
@@ -56,7 +85,7 @@ class ChatbotHeader extends ConsumerWidget {
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.history, color: Colors.white),
+                    icon: const Icon(Icons.history, color: AppColors.backgroundWhite),
                     tooltip: AppStrings.chatHistoryTooltip,
                     onPressed: onShowHistory,
                   ),

@@ -15,7 +15,7 @@ class ChatbotScreen extends ConsumerWidget {
   void _showHistoryModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       isScrollControlled: true,
       builder: (_) => const ChatbotHistoryModal(),
     );
@@ -36,42 +36,58 @@ class ChatbotScreen extends ConsumerWidget {
               ChatbotHeader(onShowHistory: () => _showHistoryModal(context)),
               Expanded(
                 child: isLoadingHistory
-                  ? ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-                      itemCount: 4,
-                      itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: ChatBubble(text: '', time: '', isUser: index % 2 == 1, isLoading: true),
-                      ),
-                    )
-                  : messages.isEmpty 
-                  ? const Center(
-                      child: Text(
-                        AppStrings.chatGreeting,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: AppColors.textGrey, fontSize: 16),
-                      ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) {
-                        final msg = messages[index];
-                        final isUser = msg['role'] == 'user';
-                        
-                        return Padding(
+                    ? ListView.builder(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 24,
+                        ),
+                        itemCount: 4,
+                        itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.only(bottom: 16),
                           child: ChatBubble(
-                            text: msg['content'] ?? '',
+                            text: '',
                             time: '',
-                            isUser: isUser,
-                            isLoading: !isUser && (msg['content'] ?? '').toString().isEmpty,
-                            imagePath: msg['imagePath'] as String?,
-                            filePath: msg['filePath'] as String?,
+                            isUser: index % 2 == 1,
+                            isLoading: true,
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      )
+                    : messages.isEmpty
+                    ? const Center(
+                        child: Text(
+                          AppStrings.chatGreeting,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: AppColors.textGrey,
+                            fontSize: 16,
+                          ),
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 24,
+                        ),
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) {
+                          final msg = messages[index];
+                          final isUser = msg['role'] == 'user';
+
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: ChatBubble(
+                              text: msg['content'] ?? '',
+                              time: '',
+                              isUser: isUser,
+                              isLoading:
+                                  !isUser &&
+                                  (msg['content'] ?? '').toString().isEmpty,
+                              imagePath: msg['imagePath'] as String?,
+                              filePath: msg['filePath'] as String?,
+                            ),
+                          );
+                        },
+                      ),
               ),
               const ChatInputArea(),
             ],

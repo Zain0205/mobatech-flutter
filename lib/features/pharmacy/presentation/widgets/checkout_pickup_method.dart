@@ -47,7 +47,9 @@ class CheckoutPickupMethod extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryLight : AppColors.backgroundWhite,
+          color: isSelected
+              ? AppColors.primaryLight
+              : AppColors.backgroundWhite,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? AppColors.primary : AppColors.borderGrey,
@@ -56,7 +58,11 @@ class CheckoutPickupMethod extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Icon(icon, size: 32, color: isSelected ? AppColors.primary : AppColors.iconGrey),
+            Icon(
+              icon,
+              size: 32,
+              color: isSelected ? AppColors.primary : AppColors.iconGrey,
+            ),
             const SizedBox(height: 8),
             Text(
               title,

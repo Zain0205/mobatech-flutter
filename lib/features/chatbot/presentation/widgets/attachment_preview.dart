@@ -18,7 +18,9 @@ class AttachmentPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (selectedImage == null && selectedFile == null) return const SizedBox.shrink();
+    if (selectedImage == null && selectedFile == null) {
+      return const SizedBox.shrink();
+    }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),

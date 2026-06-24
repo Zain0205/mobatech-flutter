@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../../../patient_support/providers/patient_support_provider.dart';
-import '../screens/search_screen.dart';
+import 'home_header_parts.dart';
 
 class HomeHeader extends ConsumerWidget {
   const HomeHeader({super.key});
@@ -15,7 +14,8 @@ class HomeHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userProfile = ref.watch(userProfileProvider).value;
-    final firstName = userProfile?.fullName.split(' ').first ?? AppStrings.defaultUser;
+    final firstName =
+        userProfile?.fullName.split(' ').first ?? AppStrings.defaultUser;
 
     return Container(
       width: double.infinity,
@@ -48,14 +48,19 @@ class HomeHeader extends ConsumerWidget {
                     children: [
                       CircleAvatar(
                         radius: 24,
-                        backgroundColor: Colors.white.withValues(alpha: 0.2),
+                        backgroundColor: AppColors.backgroundWhite.withValues(alpha: 0.2),
                         backgroundImage: userProfile?.imagePath != null
                             ? (userProfile!.imagePath!.startsWith('http')
-                                ? NetworkImage(userProfile.imagePath!) as ImageProvider
-                                : FileImage(File(userProfile.imagePath!)))
+                                  ? NetworkImage(userProfile.imagePath!)
+                                        as ImageProvider
+                                  : FileImage(File(userProfile.imagePath!)))
                             : null,
                         child: userProfile?.imagePath == null
-                            ? const Icon(Icons.person, color: AppColors.textWhite, size: 28)
+                            ? const Icon(
+                                Icons.person,
+                                color: AppColors.textWhite,
+                                size: 28,
+                              )
                             : null,
                       ),
                       const SizedBox(width: 16),
@@ -84,14 +89,21 @@ class HomeHeader extends ConsumerWidget {
                       ),
                       Consumer(
                         builder: (context, ref, child) {
-                          final unreadCountAsync = ref.watch(unreadReminderCountProvider);
+                          final unreadCountAsync = ref.watch(
+                            unreadReminderCountProvider,
+                          );
                           return Stack(
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.notifications_outlined, color: AppColors.textWhite, size: 28),
+                                icon: const Icon(
+                                  Icons.notifications_outlined,
+                                  color: AppColors.textWhite,
+                                  size: 28,
+                                ),
                                 onPressed: () => context.push('/notifications'),
                               ),
-                              if (unreadCountAsync.value != null && unreadCountAsync.value! > 0)
+                              if (unreadCountAsync.value != null &&
+                                  unreadCountAsync.value! > 0)
                                 Positioned(
                                   right: 6,
                                   top: 6,
@@ -103,7 +115,11 @@ class HomeHeader extends ConsumerWidget {
                                     ),
                                     child: Text(
                                       unreadCountAsync.value!.toString(),
-                                      style: const TextStyle(color: AppColors.textWhite, fontSize: 10, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(
+                                        color: AppColors.textWhite,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -114,44 +130,7 @@ class HomeHeader extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                            child: Container(
-                              height: 48,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: TextField(
-                                onSubmitted: (value) {
-                                  if (value.trim().isNotEmpty) {
-                                    ref.read(globalSearchQueryProvider.notifier).state = value;
-                                    context.push('/search');
-                                  }
-                                },
-                                style: const TextStyle(color: AppColors.textWhite),
-                                decoration: const InputDecoration(
-                                  hintText: AppStrings.searchHint,
-                                  hintStyle: TextStyle(
-                                    color: AppColors.textWhite70,
-                                    fontSize: 13,
-                                  ),
-                                  prefixIcon: Icon(Icons.search, color: AppColors.textWhite, size: 20),
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(vertical: 14),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  const HomeHeaderSearchField(),
                 ],
               ),
             ),

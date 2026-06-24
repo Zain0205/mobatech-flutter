@@ -7,18 +7,14 @@ class ResultCard extends StatelessWidget {
   final MedicalResult result;
   final VoidCallback onTap;
 
-  const ResultCard({
-    super.key,
-    required this.result,
-    required this.onTap,
-  });
+  const ResultCard({super.key, required this.result, required this.onTap});
 
   Color _getStatusColor() {
     switch (result.status.toLowerCase()) {
       case 'selesai':
         return AppColors.successGreen;
       case 'menunggu hasil':
-        return Colors.orange;
+        return AppColors.iconOrange;
       default:
         return AppColors.primary;
     }
@@ -29,7 +25,7 @@ class ResultCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.borderGrey),
         boxShadow: [
@@ -45,7 +41,7 @@ class ResultCard extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Material(
-            color: Colors.transparent,
+            color: AppColors.transparent,
             child: InkWell(
               onTap: onTap,
               child: Padding(
@@ -57,7 +53,10 @@ class ResultCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: _getStatusColor().withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
@@ -92,7 +91,11 @@ class ResultCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.local_hospital_outlined, size: 16, color: AppColors.iconGrey),
+                        const Icon(
+                          Icons.local_hospital_outlined,
+                          size: 16,
+                          color: AppColors.iconGrey,
+                        ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -109,7 +112,11 @@ class ResultCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          const Icon(Icons.person_outline, size: 16, color: AppColors.iconGrey),
+                          const Icon(
+                            Icons.person_outline,
+                            size: 16,
+                            color: AppColors.iconGrey,
+                          ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(

@@ -7,11 +7,7 @@ class ReminderCard extends StatelessWidget {
   final Reminder reminder;
   final VoidCallback onTap;
 
-  const ReminderCard({
-    super.key,
-    required this.reminder,
-    required this.onTap,
-  });
+  const ReminderCard({super.key, required this.reminder, required this.onTap});
 
   IconData _getIconData(String type) {
     switch (type) {
@@ -33,7 +29,7 @@ class ReminderCard extends StatelessWidget {
       case 'appointment':
         return AppColors.primary;
       case 'result':
-        return Colors.blue;
+        return AppColors.iconBlue;
       default:
         return AppColors.primary;
     }
@@ -44,10 +40,14 @@ class ReminderCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: reminder.isRead ? Colors.white : AppColors.primaryLight.withValues(alpha: 0.3),
+        color: reminder.isRead
+            ? AppColors.backgroundWhite
+            : AppColors.primaryLight.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: reminder.isRead ? AppColors.borderGrey : AppColors.primaryLight,
+          color: reminder.isRead
+              ? AppColors.borderGrey
+              : AppColors.primaryLight,
         ),
         boxShadow: [
           BoxShadow(
@@ -71,7 +71,9 @@ class ReminderCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: _getIconColor(reminder.type).withValues(alpha: 0.1),
+                      color: _getIconColor(
+                        reminder.type,
+                      ).withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -92,7 +94,9 @@ class ReminderCard extends StatelessWidget {
                               child: Text(
                                 reminder.title,
                                 style: TextStyle(
-                                  fontWeight: reminder.isRead ? FontWeight.normal : FontWeight.bold,
+                                  fontWeight: reminder.isRead
+                                      ? FontWeight.normal
+                                      : FontWeight.bold,
                                   color: AppColors.textDark,
                                   fontSize: 16,
                                 ),
@@ -119,7 +123,8 @@ class ReminderCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          reminder.dateTime, // In a real app we might format this
+                          reminder
+                              .dateTime, // In a real app we might format this
                           style: const TextStyle(
                             color: AppColors.textLightGrey,
                             fontSize: 12,

@@ -18,7 +18,9 @@ class ProfileLoadingSkeleton extends StatelessWidget {
               pinned: true,
               backgroundColor: AppColors.primary,
               shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(32),
+                ),
               ),
             ),
             SliverToBoxAdapter(
@@ -26,9 +28,17 @@ class ProfileLoadingSkeleton extends StatelessWidget {
                 padding: const EdgeInsets.all(24),
                 child: Column(
                   children: [
-                    const SkeletonLoader(width: double.infinity, height: 140, borderRadius: 24),
+                    const SkeletonLoader(
+                      width: double.infinity,
+                      height: 140,
+                      borderRadius: 24,
+                    ),
                     const SizedBox(height: 32),
-                    const SkeletonLoader(width: double.infinity, height: 360, borderRadius: 24),
+                    const SkeletonLoader(
+                      width: double.infinity,
+                      height: 360,
+                      borderRadius: 24,
+                    ),
                   ],
                 ),
               ),

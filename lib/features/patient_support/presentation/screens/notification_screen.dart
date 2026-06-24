@@ -1,3 +1,4 @@
+import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -14,7 +15,13 @@ class NotificationScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.backgroundScreen,
       appBar: AppBar(
-        title: const Text('Notifikasi & Pengingat', style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold)),
+        title: Text(
+          AppStrings.extNotifikasipengingat,
+          style: TextStyle(
+            color: AppColors.textWhite,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
@@ -23,7 +30,9 @@ class NotificationScreen extends ConsumerWidget {
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
         ),
         flexibleSpace: ClipRRect(
-          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+          borderRadius: const BorderRadius.vertical(
+            bottom: Radius.circular(24),
+          ),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -51,7 +60,8 @@ class NotificationScreen extends ConsumerWidget {
           }
 
           return RefreshIndicator(
-            onRefresh: () => ref.read(remindersProvider.notifier).loadReminders(),
+            onRefresh: () =>
+                ref.read(remindersProvider.notifier).loadReminders(),
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: reminders.length,
@@ -61,7 +71,9 @@ class NotificationScreen extends ConsumerWidget {
                   reminder: reminder,
                   onTap: () {
                     if (!reminder.isRead) {
-                      ref.read(remindersProvider.notifier).markAsRead(reminder.id);
+                      ref
+                          .read(remindersProvider.notifier)
+                          .markAsRead(reminder.id);
                     }
                   },
                 );
@@ -70,7 +82,8 @@ class NotificationScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Gagal memuat notifikasi: $err')),
+        error: (err, stack) =>
+            Center(child: Text('${AppStrings.extGagalmemuatnotifikasi} $err')),
       ),
     );
   }

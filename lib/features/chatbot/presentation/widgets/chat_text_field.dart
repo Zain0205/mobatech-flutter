@@ -37,14 +37,21 @@ class ChatTextField extends StatelessWidget {
                   onSubmitted: (_) => onSubmitted(),
                   decoration: const InputDecoration(
                     hintText: AppStrings.chatInputHint,
-                    hintStyle: TextStyle(fontSize: 13, color: AppColors.textGrey),
+                    hintStyle: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.textGrey,
+                    ),
                     border: InputBorder.none,
                   ),
                 ),
               ),
               GestureDetector(
                 onTap: onAttachmentTap,
-                child: const Icon(Icons.attach_file, color: AppColors.textGrey, size: 20),
+                child: const Icon(
+                  Icons.attach_file,
+                  color: AppColors.textGrey,
+                  size: 20,
+                ),
               ),
             ],
           ),

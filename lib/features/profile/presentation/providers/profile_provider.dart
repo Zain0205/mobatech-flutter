@@ -17,9 +17,9 @@ class UserProfile {
   final List<dynamic>? familyMembers;
 
   UserProfile({
-    required this.id, 
-    required this.fullName, 
-    required this.email, 
+    required this.id,
+    required this.fullName,
+    required this.email,
     required this.phone,
     this.imagePath,
     this.bloodType,
@@ -43,8 +43,12 @@ class UserProfile {
       phone: json['phone_number'] ?? json['phone'] ?? '',
       imagePath: imgPath,
       bloodType: json['blood_type'],
-      height: json['height'] != null ? int.tryParse(json['height'].toString()) : null,
-      weight: json['weight'] != null ? int.tryParse(json['weight'].toString()) : null,
+      height: json['height'] != null
+          ? int.tryParse(json['height'].toString())
+          : null,
+      weight: json['weight'] != null
+          ? int.tryParse(json['weight'].toString())
+          : null,
       allergies: json['allergies'],
       dob: json['date_of_birth'],
       gender: json['gender'],
@@ -74,18 +78,11 @@ final userProfileProvider = FutureProvider<UserProfile?>((ref) async {
   final prefs = await SharedPreferences.getInstance();
   final userDataString = prefs.getString('user_data');
   if (userDataString != null) {
-    final Map<String, dynamic> json = jsonDecode(userDataString);
-    return UserProfile.fromJson(json);
+    final dynamic decoded = jsonDecode(userDataString);
+    if (decoded is Map<String, dynamic>) {
+      return UserProfile.fromJson(decoded);
+    }
   }
-  // Fallback for current session where user logged in before this update
-  return UserProfile(
-    id: 1, 
-    fullName: "Bang Rico", 
-    email: "rico@example.com", 
-    phone: "08123456789",
-    bloodType: "O+",
-    height: 170,
-    weight: 65,
-    allergies: "Tidak Ada",
-  );
+  // Return null if there's no valid user data, forcing a re-login or empty state
+  return null;
 });

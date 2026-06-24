@@ -26,7 +26,7 @@ class SymptomsCard extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
-            color: Colors.white.withValues(alpha: 0.85),
+            color: AppColors.backgroundWhite.withValues(alpha: 0.85),
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +42,7 @@ class SymptomsCard extends StatelessWidget {
                 const SizedBox(height: 12),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.backgroundWhite,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: AppColors.borderGrey.withValues(alpha: 0.5),

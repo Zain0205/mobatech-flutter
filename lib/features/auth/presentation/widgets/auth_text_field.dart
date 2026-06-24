@@ -38,10 +38,16 @@ class AuthTextField extends StatelessWidget {
         keyboardType: keyboardType,
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(color: AppColors.textLightGrey, fontSize: 14),
+          hintStyle: const TextStyle(
+            color: AppColors.textLightGrey,
+            fontSize: 14,
+          ),
           filled: true,
           fillColor: AppColors.backgroundWhite,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 16,
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(24),
             borderSide: const BorderSide(color: AppColors.borderGrey),
@@ -59,7 +65,9 @@ class AuthTextField extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 8.0),
                   child: IconButton(
                     icon: Icon(
-                      obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                      obscureText
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
                       color: AppColors.textDark,
                       size: 22,
                     ),

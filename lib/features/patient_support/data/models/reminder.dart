@@ -20,9 +20,13 @@ class Reminder {
       id: json['id']?.toString() ?? '',
       title: json['title']?.toString() ?? '',
       message: json['message']?.toString() ?? '',
-      dateTime: json['date_time']?.toString() ?? json['dateTime']?.toString() ?? '',
+      dateTime:
+          json['date_time']?.toString() ?? json['dateTime']?.toString() ?? '',
       type: json['type']?.toString() ?? '',
-      isRead: json['is_read'] == 1 || json['is_read'] == true || json['isRead'] == true,
+      isRead:
+          json['is_read'] == 1 ||
+          json['is_read'] == true ||
+          json['isRead'] == true,
     );
   }
 

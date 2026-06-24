@@ -1,3 +1,4 @@
+import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -9,7 +10,7 @@ class AppointmentSortBottomSheet extends ConsumerWidget {
   static void show(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (context) => const AppointmentSortBottomSheet(),
     );
   }
@@ -31,7 +32,7 @@ class AppointmentSortBottomSheet extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             ListTile(
-              title: const Text('Abjad A-Z'),
+              title: Text(AppStrings.extAbjadaz),
               trailing:
                   ref.watch(doctorSortProvider) == DoctorSortOption.nameAsc
                   ? const Icon(Icons.check, color: AppColors.primary)
@@ -43,7 +44,7 @@ class AppointmentSortBottomSheet extends ConsumerWidget {
               },
             ),
             ListTile(
-              title: const Text('Abjad Z-A'),
+              title: Text(AppStrings.extAbjadza),
               trailing:
                   ref.watch(doctorSortProvider) == DoctorSortOption.nameDesc
                   ? const Icon(Icons.check, color: AppColors.primary)

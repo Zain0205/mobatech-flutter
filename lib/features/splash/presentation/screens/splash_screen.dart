@@ -13,7 +13,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
   late final AnimationController _scaleController;
   late final AnimationController _fadeController;
   late final Animation<double> _scaleAnimation;
@@ -23,15 +24,22 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   void initState() {
     super.initState();
 
-    _scaleController = AnimationController(vsync: this, duration: AppDurations.scaleIn);
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: AppDurations.scaleIn,
+    );
     _scaleAnimation = Tween<double>(begin: 0.6, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.easeOutBack),
     );
 
-    _fadeController = AnimationController(vsync: this, duration: AppDurations.fadeIn);
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: AppDurations.fadeIn,
     );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeIn));
 
     _startAnimations();
     _checkAuthAndNavigate();

@@ -4,8 +4,9 @@ import '../../../../core/utils/formatters.dart';
 
 class PhoneTextField extends StatelessWidget {
   final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
-  const PhoneTextField({super.key, this.controller});
+  const PhoneTextField({super.key, this.controller, this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -28,19 +29,25 @@ class PhoneTextField extends StatelessWidget {
             ),
             child: const Text(
               '+62',
-              style: TextStyle(color: AppColors.textGrey, fontSize: 14, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                color: AppColors.textGrey,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           Expanded(
-            child: TextField(
+            child: TextFormField(
               controller: controller,
               keyboardType: TextInputType.phone,
-              inputFormatters: [
-                PhonePrefixFormatter(),
-              ],
+              validator: validator,
+              inputFormatters: [PhonePrefixFormatter()],
               decoration: const InputDecoration(
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
               ),
             ),
           ),

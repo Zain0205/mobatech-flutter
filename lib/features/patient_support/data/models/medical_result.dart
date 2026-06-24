@@ -23,12 +23,13 @@ class MedicalResult {
     // Kombinasi result dan notes dari backend
     final backendResult = json['result']?.toString() ?? '';
     final backendNotes = json['notes']?.toString() ?? '';
-    final combinedDetails = backendResult.isNotEmpty 
-        ? '$backendResult\n\nCatatan Dokter:\n$backendNotes' 
+    final combinedDetails = backendResult.isNotEmpty
+        ? '$backendResult\n\nCatatan Dokter:\n$backendNotes'
         : json['result_details']?.toString();
 
     // Format tanggal (Ambil bagian YYYY-MM-DD saja jika ada T)
-    String dateStr = json['result_date']?.toString() ?? json['date']?.toString() ?? '';
+    String dateStr =
+        json['result_date']?.toString() ?? json['date']?.toString() ?? '';
     if (dateStr.contains('T')) {
       // Basic formatting, e.g. "2026-06-22T15:22:17Z" -> "22 Jun 2026" (or just keep YYYY-MM-DD)
       final parts = dateStr.split('T')[0].split('-');
@@ -39,13 +40,16 @@ class MedicalResult {
 
     return MedicalResult(
       id: json['id']?.toString() ?? '',
-      testName: json['test_name']?.toString() ?? json['testName']?.toString() ?? '',
+      testName:
+          json['test_name']?.toString() ?? json['testName']?.toString() ?? '',
       date: dateStr,
       status: json['status']?.toString() ?? 'Selesai',
       hospitalName: json['hospital_name']?.toString() ?? 'RS Hermina Kemayoran',
-      doctorName: json['doctor_name']?.toString() ?? json['doctorName']?.toString(),
+      doctorName:
+          json['doctor_name']?.toString() ?? json['doctorName']?.toString(),
       resultDetails: combinedDetails,
-      documentUrl: json['file_url']?.toString() ?? json['document_url']?.toString(),
+      documentUrl:
+          json['file_url']?.toString() ?? json['document_url']?.toString(),
     );
   }
 

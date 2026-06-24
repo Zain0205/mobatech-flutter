@@ -1,17 +1,18 @@
 import 'package:dio/dio.dart';
+import '../constants/app_strings.dart';
 
 class ErrorHandler {
   static String getMessage(dynamic error) {
-    if (error == null) return 'Terjadi kesalahan sistem yang tidak diketahui';
-    
+    if (error == null) return AppStrings.errUnknown;
+
     if (error is DioException) {
-      if (error.type == DioExceptionType.connectionTimeout || 
-          error.type == DioExceptionType.receiveTimeout || 
+      if (error.type == DioExceptionType.connectionTimeout ||
+          error.type == DioExceptionType.receiveTimeout ||
           error.type == DioExceptionType.sendTimeout ||
           error.type == DioExceptionType.connectionError) {
-        return 'Koneksi ke server terputus. Pastikan internet Anda stabil atau server sedang aktif.';
+        return AppStrings.errConnection;
       }
-      
+
       if (error.response?.data != null) {
         final data = error.response!.data;
         if (data is Map<String, dynamic>) {
@@ -38,29 +39,32 @@ class ErrorHandler {
     String eLower = e.toLowerCase();
 
     if (eLower.contains('unauthenticated') || eLower.contains('401')) {
-      return 'Sesi Anda telah habis. Silakan login kembali.';
+      return AppStrings.errSessionExpired;
     } else if (eLower.contains('unauthorized') || eLower.contains('403')) {
-      return 'Anda tidak memiliki akses ke fitur ini.';
+      return AppStrings.errUnauthorized;
     } else if (eLower.contains('validation_error') || eLower.contains('422')) {
-      return 'Format data yang Anda masukkan tidak valid.';
+      return AppStrings.errValidation;
     } else if (eLower.contains('not_found') || eLower.contains('404')) {
-      return 'Data tidak ditemukan.';
+      return AppStrings.errNotFound;
     } else if (eLower.contains('conflict') || eLower.contains('409')) {
-      return 'Terjadi duplikasi data atau konflik.';
+      return AppStrings.errConflict;
     } else if (eLower.contains('internal_error') || eLower.contains('500')) {
-      return 'Terjadi kesalahan pada server. Coba beberapa saat lagi.';
+      return AppStrings.errServer;
     }
 
-    if (eLower.contains('invalid credentials') || eLower.contains('password salah') || eLower.contains('user not found')) {
-      return 'Email atau kata sandi tidak sesuai. Silakan periksa kembali.';
-    } else if (eLower.contains('email already exists') || eLower.contains('duplicate')) {
-      return 'Email ini sudah terdaftar. Gunakan email lain.';
+    if (eLower.contains('invalid credentials') ||
+        eLower.contains('password salah') ||
+        eLower.contains('user not found')) {
+      return AppStrings.errInvalidCreds;
+    } else if (eLower.contains('email already exists') ||
+        eLower.contains('duplicate')) {
+      return AppStrings.errEmailExists;
     }
-    
+
     e = e.replaceAll('Exception:', '').replaceAll('Error:', '').trim();
-    if (e.isEmpty) return 'Gagal memproses permintaan.';
-    if (e.length > 50) return 'Gagal terhubung ke layanan (Error Timeout).';
-    
+    if (e.isEmpty) return AppStrings.errRequestFailed;
+    if (e.length > 50) return AppStrings.errTimeout;
+
     return '${e[0].toUpperCase()}${e.substring(1)}';
   }
 }

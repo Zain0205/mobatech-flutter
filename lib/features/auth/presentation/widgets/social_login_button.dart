@@ -21,7 +21,9 @@ class SocialLoginButton extends StatelessWidget {
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           side: const BorderSide(color: AppColors.borderGrey, width: 1.5),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.borderRadiusXL)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.borderRadiusXL),
+          ),
           backgroundColor: AppColors.backgroundWhite,
           foregroundColor: AppColors.textGrey,
         ),
@@ -36,7 +38,11 @@ class SocialLoginButton extends StatelessWidget {
                 color: AppColors.backgroundWhite,
                 shape: BoxShape.circle,
                 boxShadow: [
-                  BoxShadow(color: AppColors.shadowColor, blurRadius: 4, offset: const Offset(0, 2)),
+                  BoxShadow(
+                    color: AppColors.shadowColor,
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
                 ],
               ),
               child: ShaderMask(

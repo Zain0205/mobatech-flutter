@@ -55,7 +55,8 @@ class PharmacyOrder {
       totalPrice: (json['total_price'] as num?)?.toDouble() ?? 0.0,
       paymentMethod: json['payment_method'] as String? ?? '',
       pickupMethod: json['pickup_method'] as String? ?? '',
-      items: (json['items'] as List<dynamic>?)
+      items:
+          (json['items'] as List<dynamic>?)
               ?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],

@@ -16,7 +16,11 @@ class ProfileUserCard extends StatelessWidget {
         color: AppColors.primaryLight.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.05), blurRadius: 15, offset: const Offset(0, 5)),
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
         ],
       ),
       child: ClipRRect(
@@ -30,11 +34,21 @@ class ProfileUserCard extends StatelessWidget {
                 CircleAvatar(
                   radius: 36,
                   backgroundColor: AppColors.primary,
-                  backgroundImage: user.imagePath != null ? (user.imagePath!.startsWith('http') ? NetworkImage(user.imagePath!) as ImageProvider : FileImage(File(user.imagePath!))) : null,
+                  backgroundImage: user.imagePath != null
+                      ? (user.imagePath!.startsWith('http')
+                            ? NetworkImage(user.imagePath!) as ImageProvider
+                            : FileImage(File(user.imagePath!)))
+                      : null,
                   child: user.imagePath == null
                       ? Text(
-                          user.fullName.isNotEmpty ? user.fullName[0].toUpperCase() : 'U',
-                          style: const TextStyle(fontSize: 32, color: Colors.white, fontWeight: FontWeight.bold),
+                          user.fullName.isNotEmpty
+                              ? user.fullName[0].toUpperCase()
+                              : 'U',
+                          style: const TextStyle(
+                            fontSize: 32,
+                            color: AppColors.backgroundWhite,
+                            fontWeight: FontWeight.bold,
+                          ),
                         )
                       : null,
                 ),
@@ -45,17 +59,27 @@ class ProfileUserCard extends StatelessWidget {
                     children: [
                       Text(
                         user.fullName,
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textDark,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         user.email,
-                        style: const TextStyle(fontSize: 14, color: AppColors.textGrey),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: AppColors.textGrey,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         Formatters.formatPhoneNumber(user.phone),
-                        style: const TextStyle(fontSize: 14, color: AppColors.textGrey),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: AppColors.textGrey,
+                        ),
                       ),
                     ],
                   ),

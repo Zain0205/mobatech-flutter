@@ -32,7 +32,11 @@ class OrdersTabView extends ConsumerWidget {
                   color: AppColors.backgroundWhite,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
-                    BoxShadow(color: AppColors.shadowColor, blurRadius: 10, offset: const Offset(0, 4)),
+                    BoxShadow(
+                      color: AppColors.shadowColor,
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
                   ],
                 ),
                 child: Column(
@@ -41,23 +45,50 @@ class OrdersTabView extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(order.orderNumber, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark)),
+                        Text(
+                          order.orderNumber,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: AppColors.textDark,
+                          ),
+                        ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(color: Colors.orange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-                          child: Text(order.status, style: const TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.bold)),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.iconOrange.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            order.status,
+                            style: const TextStyle(
+                              color: AppColors.iconOrange,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        const Icon(Icons.inventory_2_outlined, color: AppColors.textGrey, size: 20),
+                        const Icon(
+                          Icons.inventory_2_outlined,
+                          color: AppColors.textGrey,
+                          size: 20,
+                        ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             order.items.map((e) => e.medicine.name).join(', '),
-                            style: const TextStyle(color: AppColors.textGrey, fontSize: 14),
+                            style: const TextStyle(
+                              color: AppColors.textGrey,
+                              fontSize: 14,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -68,8 +99,21 @@ class OrdersTabView extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(AppStrings.totalOrder, style: TextStyle(color: AppColors.textDark, fontSize: 14)),
-                        Text('Rp ${order.totalPrice.toInt()}', style: const TextStyle(color: AppColors.primary, fontSize: 16, fontWeight: FontWeight.bold)),
+                        const Text(
+                          AppStrings.totalOrder,
+                          style: TextStyle(
+                            color: AppColors.textDark,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          'Rp ${order.totalPrice.toInt()}',
+                          style: const TextStyle(
+                            color: AppColors.primary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -83,9 +127,14 @@ class OrdersTabView extends ConsumerWidget {
         padding: const EdgeInsets.all(16.0),
         itemCount: 3,
         separatorBuilder: (context, index) => const SizedBox(height: 16),
-        itemBuilder: (context, index) => const ShimmerLoading(width: double.infinity, height: 140, borderRadius: 16),
+        itemBuilder: (context, index) => const ShimmerLoading(
+          width: double.infinity,
+          height: 140,
+          borderRadius: 16,
+        ),
       ),
-      error: (err, stack) => const Center(child: Text(AppStrings.errorLoadOrders)),
+      error: (err, stack) =>
+          const Center(child: Text(AppStrings.errorLoadOrders)),
     );
   }
 }

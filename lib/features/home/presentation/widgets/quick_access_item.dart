@@ -31,7 +31,7 @@ class QuickAccessItem extends StatelessWidget {
                   color: AppColors.shadowColor,
                   blurRadius: 8,
                   offset: const Offset(0, 4),
-                )
+                ),
               ],
             ),
             child: Icon(icon, color: iconColor, size: 28),
@@ -41,7 +41,11 @@ class QuickAccessItem extends StatelessWidget {
             child: Text(
               label,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textDark),
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textDark,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

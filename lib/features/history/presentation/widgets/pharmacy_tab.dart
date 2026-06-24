@@ -16,7 +16,14 @@ class PharmacyTab extends ConsumerWidget {
     final ordersAsync = ref.watch(pharmacyHistoryProvider);
     return ordersAsync.when(
       data: (orders) {
-        if (orders.isEmpty) return const Center(child: Text(AppStrings.noPharmacyHistory, style: TextStyle(color: AppColors.textGrey)));
+        if (orders.isEmpty) {
+          return const Center(
+            child: Text(
+              AppStrings.noPharmacyHistory,
+              style: TextStyle(color: AppColors.textGrey),
+            ),
+          );
+        }
         return ListView.builder(
           padding: const EdgeInsets.all(16),
           itemCount: orders.length,
@@ -25,10 +32,10 @@ class PharmacyTab extends ConsumerWidget {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: HistoryCard(
-                title: order.title, 
-                status: order.status, 
-                date: order.date, 
-                onTap: () => context.push('/pharmacy/tracking', extra: order)
+                title: order.title,
+                status: order.status,
+                date: order.date,
+                onTap: () => context.push('/pharmacy/tracking', extra: order),
               ),
             );
           },
@@ -46,7 +53,11 @@ class PharmacyTab extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.cloud_off, size: 64, color: AppColors.textLightGrey),
+            const Icon(
+              Icons.cloud_off,
+              size: 64,
+              color: AppColors.textLightGrey,
+            ),
             const SizedBox(height: 16),
             Text(
               message,

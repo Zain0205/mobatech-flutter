@@ -1,3 +1,4 @@
+import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +16,13 @@ class MedicalResultsScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.backgroundScreen,
       appBar: AppBar(
-        title: const Text('Data Rekam Medis', style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold)),
+        title: Text(
+          AppStrings.extDatarekammedis,
+          style: TextStyle(
+            color: AppColors.textWhite,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
@@ -24,7 +31,9 @@ class MedicalResultsScreen extends ConsumerWidget {
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
         ),
         flexibleSpace: ClipRRect(
-          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+          borderRadius: const BorderRadius.vertical(
+            bottom: Radius.circular(24),
+          ),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -69,7 +78,8 @@ class MedicalResultsScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Gagal memuat hasil medis: $err')),
+        error: (err, stack) =>
+            Center(child: Text('${AppStrings.extGagalmemuathasilmedis} $err')),
       ),
     );
   }

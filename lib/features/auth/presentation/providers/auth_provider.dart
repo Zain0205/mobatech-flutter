@@ -30,7 +30,12 @@ class AuthNotifier extends StateNotifier<bool> {
     }
   }
 
-  Future<void> register(String fullName, String email, String phone, String password) async {
+  Future<void> register(
+    String fullName,
+    String email,
+    String phone,
+    String password,
+  ) async {
     state = true;
     try {
       await _repository.register(fullName, email, phone, password);
@@ -45,12 +50,32 @@ class AuthNotifier extends StateNotifier<bool> {
     }
   }
 
-  Future<void> updateProfile(String fullName, String phone, String? imagePath, {String? bloodType, int? height, int? weight, String? allergies, String? dob, String? gender}) async {
+  Future<void> updateProfile(
+    String fullName,
+    String phone,
+    String? imagePath, {
+    String? bloodType,
+    int? height,
+    int? weight,
+    String? allergies,
+    String? dob,
+    String? gender,
+  }) async {
     state = true;
     try {
-      final res = await _repository.updateProfile(fullName, phone, imagePath, bloodType: bloodType, height: height, weight: weight, allergies: allergies, dob: dob, gender: gender);
+      final res = await _repository.updateProfile(
+        fullName,
+        phone,
+        imagePath,
+        bloodType: bloodType,
+        height: height,
+        weight: weight,
+        allergies: allergies,
+        dob: dob,
+        gender: gender,
+      );
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('user_data', jsonEncode(res['user']));
+      await prefs.setString('user_data', jsonEncode(res));
     } finally {
       state = false;
     }
@@ -60,7 +85,7 @@ class AuthNotifier extends StateNotifier<bool> {
     try {
       final res = await _repository.getProfile();
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('user_data', jsonEncode(res['user']));
+      await prefs.setString('user_data', jsonEncode(res));
     } catch (e) {
       // Ignore errors silently on background refresh
     }

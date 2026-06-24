@@ -26,7 +26,9 @@ class ProfileAvatarPicker extends StatelessWidget {
               border: Border.all(color: AppColors.primary, width: 3),
               image: imagePath != null
                   ? DecorationImage(
-                      image: imagePath!.startsWith('http') ? NetworkImage(imagePath!) as ImageProvider : FileImage(File(imagePath!)),
+                      image: imagePath!.startsWith('http')
+                          ? NetworkImage(imagePath!) as ImageProvider
+                          : FileImage(File(imagePath!)),
                       fit: BoxFit.cover,
                     )
                   : null,
@@ -45,9 +47,13 @@ class ProfileAvatarPicker extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
+                  border: Border.all(color: AppColors.backgroundWhite, width: 2),
                 ),
-                child: const Icon(Icons.camera_alt, color: Colors.white, size: 16),
+                child: const Icon(
+                  Icons.camera_alt,
+                  color: AppColors.backgroundWhite,
+                  size: 16,
+                ),
               ),
             ),
           ),

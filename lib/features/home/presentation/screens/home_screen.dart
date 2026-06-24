@@ -91,7 +91,7 @@ class HomeScreen extends ConsumerWidget {
 
   Widget _buildAgendaList(WidgetRef ref) {
     final appointmentsAsync = ref.watch(userAppointmentsProvider);
-    
+
     return appointmentsAsync.when(
       data: (appointments) {
         if (appointments.isEmpty) {
@@ -105,7 +105,7 @@ class HomeScreen extends ConsumerWidget {
             ),
           );
         }
-        
+
         return ListView.builder(
           padding: EdgeInsets.zero,
           shrinkWrap: true,

@@ -36,7 +36,10 @@ class LoginScreen extends StatelessWidget {
                           right: -20,
                           child: Opacity(
                             opacity: 0.2,
-                            child: Image.asset('assets/header_logo.png', width: 220),
+                            child: Image.asset(
+                              'assets/header_logo.png',
+                              width: 220,
+                            ),
                           ),
                         ),
                         Positioned(
@@ -50,8 +53,13 @@ class LoginScreen extends StatelessWidget {
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Padding(
-                            padding: EdgeInsets.only(bottom: constraints.maxHeight * 0.06),
-                            child: Image.asset('assets/doctor.png', height: constraints.maxHeight * 0.25),
+                            padding: EdgeInsets.only(
+                              bottom: constraints.maxHeight * 0.06,
+                            ),
+                            child: Image.asset(
+                              'assets/doctor.png',
+                              height: constraints.maxHeight * 0.25,
+                            ),
                           ),
                         ),
                       ],
@@ -61,7 +69,9 @@ class LoginScreen extends StatelessWidget {
                   // Bottom White Form (Overlaps the green header)
                   Container(
                     margin: EdgeInsets.only(top: constraints.maxHeight * 0.30),
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight * 0.70),
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight * 0.70,
+                    ),
                     width: double.infinity,
                     decoration: const BoxDecoration(
                       color: AppColors.backgroundWhite,
@@ -70,7 +80,11 @@ class LoginScreen extends StatelessWidget {
                         topRight: Radius.circular(AppSizes.borderRadiusCard),
                       ),
                       boxShadow: [
-                        BoxShadow(color: Colors.black12, blurRadius: 20, offset: Offset(0, -5)),
+                        BoxShadow(
+                          color: AppColors.textDark,
+                          blurRadius: 20,
+                          offset: Offset(0, -5),
+                        ),
                       ],
                     ),
                     padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
@@ -79,12 +93,19 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         Text(
                           AppStrings.loginGreeting,
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark,
+                          ),
                         ),
                         SizedBox(height: 8),
                         Text(
                           AppStrings.loginSubtitle,
-                          style: TextStyle(fontSize: 14, color: AppColors.textGrey),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppColors.textGrey,
+                          ),
                         ),
                         SizedBox(height: 24),
                         LoginForm(),

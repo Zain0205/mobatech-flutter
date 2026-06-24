@@ -37,9 +37,24 @@ class AttachmentBottomSheet extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildOption(Icons.image, AppStrings.chatAttachmentGallery, AppColors.iconBlue, onPickGallery),
-              _buildOption(Icons.camera_alt, AppStrings.chatAttachmentCamera, AppColors.iconGreen, onPickCamera),
-              _buildOption(Icons.description, AppStrings.chatAttachmentDocument, AppColors.iconOrange, onPickDocument),
+              _buildOption(
+                Icons.image,
+                AppStrings.chatAttachmentGallery,
+                AppColors.iconBlue,
+                onPickGallery,
+              ),
+              _buildOption(
+                Icons.camera_alt,
+                AppStrings.chatAttachmentCamera,
+                AppColors.iconGreen,
+                onPickCamera,
+              ),
+              _buildOption(
+                Icons.description,
+                AppStrings.chatAttachmentDocument,
+                AppColors.iconOrange,
+                onPickDocument,
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -48,7 +63,12 @@ class AttachmentBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildOption(IconData icon, String label, Color color, VoidCallback onTap) {
+  Widget _buildOption(
+    IconData icon,
+    String label,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -64,7 +84,10 @@ class AttachmentBottomSheet extends StatelessWidget {
             child: Icon(icon, color: color, size: 28),
           ),
           const SizedBox(height: 8),
-          Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textDark)),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, color: AppColors.textDark),
+          ),
         ],
       ),
     );

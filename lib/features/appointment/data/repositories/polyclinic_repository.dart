@@ -9,7 +9,7 @@ class PolyclinicRepository {
   Future<List<Polyclinic>> getPolyclinics() async {
     try {
       final response = await _dio.get('/polyclinics');
-      final List<dynamic> data = response.data['data'] ?? [];
+      final List<dynamic> data = response.data ?? [];
       return data.map((json) => Polyclinic.fromJson(json)).toList();
     } catch (e) {
       rethrow;
@@ -19,7 +19,7 @@ class PolyclinicRepository {
   Future<Polyclinic> getPolyclinicById(int id) async {
     try {
       final response = await _dio.get('/polyclinics/$id');
-      return Polyclinic.fromJson(response.data['data']);
+      return Polyclinic.fromJson(response.data);
     } catch (e) {
       rethrow;
     }

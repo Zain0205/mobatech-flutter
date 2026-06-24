@@ -19,7 +19,11 @@ class RegisterScreen extends StatelessWidget {
         ),
         title: const Text(
           AppStrings.registerTitle,
-          style: TextStyle(color: AppColors.textWhite, fontSize: 18, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            color: AppColors.textWhite,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         centerTitle: true,
         flexibleSpace: Container(

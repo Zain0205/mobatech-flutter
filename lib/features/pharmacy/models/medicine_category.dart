@@ -3,11 +3,7 @@ class MedicineCategory {
   final String name;
   final String icon;
 
-  MedicineCategory({
-    required this.id,
-    required this.name,
-    required this.icon,
-  });
+  MedicineCategory({required this.id, required this.name, required this.icon});
 
   factory MedicineCategory.fromJson(Map<String, dynamic> json) {
     return MedicineCategory(
@@ -18,10 +14,6 @@ class MedicineCategory {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'icon': icon,
-    };
+    return {'id': id, 'name': name, 'icon': icon};
   }
 }

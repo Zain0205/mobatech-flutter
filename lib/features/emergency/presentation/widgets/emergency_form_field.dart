@@ -9,6 +9,7 @@ class EmergencyFormField extends StatelessWidget {
   final IconData icon;
   final int maxLines;
   final TextInputType? keyboardType;
+  final String? Function(String?)? validator;
 
   const EmergencyFormField({
     super.key,
@@ -17,6 +18,7 @@ class EmergencyFormField extends StatelessWidget {
     required this.icon,
     this.maxLines = 1,
     this.keyboardType,
+    this.validator,
   });
 
   @override
@@ -25,15 +27,21 @@ class EmergencyFormField extends StatelessWidget {
       controller: controller,
       maxLines: maxLines,
       keyboardType: keyboardType,
-      validator: (v) => v!.isEmpty ? AppStrings.requiredField : null,
+      validator: validator ?? (v) => v!.isEmpty ? AppStrings.requiredField : null,
       style: const TextStyle(fontSize: 15),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: AppColors.textLightGrey, fontSize: 14),
+        hintStyle: const TextStyle(
+          color: AppColors.textLightGrey,
+          fontSize: 14,
+        ),
         prefixIcon: Icon(icon, color: AppColors.primary, size: 22),
         filled: true,
         fillColor: AppColors.backgroundWhite,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: AppColors.borderGrey),

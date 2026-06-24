@@ -1,3 +1,5 @@
+import '../../../../core/constants/app_strings.dart';
+import '../../../../core/utils/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -30,16 +32,12 @@ class _DoctorDetailScreenState extends ConsumerState<DoctorDetailScreen> {
   void _bookAppointment() async {
     if (_selectedScheduleId == null) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pilih jadwal terlebih dahulu')),
-      );
+      CustomSnackbar.showInfo(context, AppStrings.extPilihjadwalterlebihdahulu);
       return;
     }
     if (_symptomsController.text.isEmpty) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Isi keluhan terlebih dahulu')),
-      );
+      CustomSnackbar.showInfo(context, AppStrings.extIsikeluhanterlebihdahulu);
       return;
     }
 
@@ -56,24 +54,13 @@ class _DoctorDetailScreenState extends ConsumerState<DoctorDetailScreen> {
       if (mounted) {
         ref.invalidate(userAppointmentsProvider);
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Janji temu berhasil dibuat')),
-        );
+        CustomSnackbar.showSuccess(context, AppStrings.extJanjitemuberhasildibuat);
         Navigator.pop(context); // go back
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              ErrorHandler.getMessage(e),
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        CustomSnackbar.showError(context, ErrorHandler.getMessage(e));
       }
     } finally {
       if (mounted) {
@@ -111,7 +98,8 @@ class _DoctorDetailScreenState extends ConsumerState<DoctorDetailScreen> {
               doctor: doctor,
               schedulesAsync: schedulesAsync,
               selectedScheduleId: _selectedScheduleId,
-              onScheduleSelected: (id) => setState(() => _selectedScheduleId = id),
+              onScheduleSelected: (id) =>
+                  setState(() => _selectedScheduleId = id),
               symptomsController: _symptomsController,
               isBooking: _isBooking,
               onBook: _bookAppointment,

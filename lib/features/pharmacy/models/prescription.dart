@@ -52,7 +52,8 @@ class Prescription {
       diagnosis: json['diagnosis'] as String? ?? '',
       prescriptionDate: DateTime.parse(json['prescription_date'] as String),
       status: json['status'] as String? ?? '',
-      items: (json['items'] as List<dynamic>?)
+      items:
+          (json['items'] as List<dynamic>?)
               ?.map((e) => PrescriptionItem.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],

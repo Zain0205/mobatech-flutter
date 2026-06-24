@@ -1,3 +1,4 @@
+import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,7 +12,9 @@ class SearchAllResults extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (query.isEmpty) return const SearchEmptyState(msg: 'Ketik sesuatu untuk mencari');
+    if (query.isEmpty) {
+      return const SearchEmptyState(msg: 'Ketik sesuatu untuk mencari');
+    }
 
     final doctorsAsync = ref.watch(doctorsProvider);
     final polyclinicsAsync = ref.watch(polyclinicsProvider);
@@ -22,27 +25,61 @@ class SearchAllResults extends ConsumerWidget {
         const SearchSectionHeader(title: 'Dokter'),
         doctorsAsync.when(
           data: (doctors) {
-            final filtered = doctors.where((d) => d.name.toLowerCase().contains(query)).take(2).toList();
-            if (filtered.isEmpty) return const Padding(padding: EdgeInsets.only(bottom: 16), child: Text('Tidak ditemukan'));
+            final filtered = doctors
+                .where((d) => d.name.toLowerCase().contains(query))
+                .take(2)
+                .toList();
+            if (filtered.isEmpty) {
+              return const Padding(
+                padding: EdgeInsets.only(bottom: 16),
+                child: Text(AppStrings.extTidakditemukan),
+              );
+            }
             return Column(
-              children: filtered.map((d) => SearchItem(icon: Icons.person, title: d.name, subtitle: d.specialization, onTap: () => context.push('/appointment'))).toList(),
+              children: filtered
+                  .map(
+                    (d) => SearchItem(
+                      icon: Icons.person,
+                      title: d.name,
+                      subtitle: d.specialization,
+                      onTap: () => context.push('/appointment'),
+                    ),
+                  )
+                  .toList(),
             );
           },
           loading: () => const LinearProgressIndicator(),
-          error: (_, __) => const Text('Error memuat dokter'),
+          error: (_, __) => Text(AppStrings.extErrormemuatdokter),
         ),
         const SizedBox(height: 16),
         const SearchSectionHeader(title: 'Layanan / Poliklinik'),
         polyclinicsAsync.when(
           data: (polys) {
-            final filtered = polys.where((p) => p.name.toLowerCase().contains(query)).take(2).toList();
-            if (filtered.isEmpty) return const Padding(padding: EdgeInsets.only(bottom: 16), child: Text('Tidak ditemukan'));
+            final filtered = polys
+                .where((p) => p.name.toLowerCase().contains(query))
+                .take(2)
+                .toList();
+            if (filtered.isEmpty) {
+              return const Padding(
+                padding: EdgeInsets.only(bottom: 16),
+                child: Text(AppStrings.extTidakditemukan),
+              );
+            }
             return Column(
-              children: filtered.map((p) => SearchItem(icon: Icons.local_hospital, title: p.name, subtitle: p.description, onTap: () => context.push('/appointment'))).toList(),
+              children: filtered
+                  .map(
+                    (p) => SearchItem(
+                      icon: Icons.local_hospital,
+                      title: p.name,
+                      subtitle: p.description,
+                      onTap: () => context.push('/appointment'),
+                    ),
+                  )
+                  .toList(),
             );
           },
           loading: () => const LinearProgressIndicator(),
-          error: (_, __) => const Text('Error memuat layanan'),
+          error: (_, __) => Text(AppStrings.extErrormemuatlayanan),
         ),
       ],
     );

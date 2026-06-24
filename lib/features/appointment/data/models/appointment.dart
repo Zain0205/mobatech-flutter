@@ -31,7 +31,9 @@ class Appointment {
       status: json['status'] ?? '',
       notes: json['notes'] ?? '',
       doctor: json['doctor'] != null ? Doctor.fromJson(json['doctor']) : null,
-      schedule: json['schedule'] != null ? DoctorSchedule.fromJson(json['schedule']) : null,
+      schedule: json['schedule'] != null
+          ? DoctorSchedule.fromJson(json['schedule'])
+          : null,
     );
   }
 }

@@ -17,22 +17,27 @@ class AppointmentsTab extends ConsumerWidget {
     final appointmentsAsync = ref.watch(userAppointmentsProvider);
     return appointmentsAsync.when(
       data: (appointments) {
-        if (appointments.isEmpty) return const Center(child: Text(AppStrings.noAppointmentHistory));
+        if (appointments.isEmpty) {
+          return const Center(child: Text(AppStrings.noAppointmentHistory));
+        }
         return ListView.builder(
           padding: const EdgeInsets.all(16),
           itemCount: appointments.length,
           itemBuilder: (context, index) {
             final appt = appointments[index];
-            final title = '${AppStrings.appointmentWith} ${appt.doctor?.name ?? AppStrings.defaultDoctorName}';
+            final title =
+                '${AppStrings.appointmentWith} ${appt.doctor?.name ?? AppStrings.defaultDoctorName}';
             final status = appt.status.toUpperCase();
-            final date = appt.schedule?.date != null ? DateFormat('dd MMM yyyy').format(appt.schedule!.date!) : '-';
+            final date = appt.schedule?.date != null
+                ? DateFormat('dd MMM yyyy').format(appt.schedule!.date!)
+                : '-';
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: HistoryCard(
-                title: title, 
-                status: status, 
-                date: date, 
-                onTap: () => context.push('/appointment/user-appointments')
+                title: title,
+                status: status,
+                date: date,
+                onTap: () => context.push('/appointment/user-appointments'),
               ),
             );
           },
@@ -50,7 +55,11 @@ class AppointmentsTab extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.cloud_off, size: 64, color: AppColors.textLightGrey),
+            const Icon(
+              Icons.cloud_off,
+              size: 64,
+              color: AppColors.textLightGrey,
+            ),
             const SizedBox(height: 16),
             Text(
               message,

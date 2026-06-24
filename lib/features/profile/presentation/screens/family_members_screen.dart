@@ -1,3 +1,4 @@
+import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -16,16 +17,24 @@ class FamilyMembersScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.backgroundScreen,
       appBar: AppBar(
-        title: const Text('Anggota Keluarga', style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold)),
+        title: Text(
+          AppStrings.extAnggotakeluarga,
+          style: TextStyle(
+            color: AppColors.textWhite,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: AppColors.primary,
         centerTitle: true,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: AppColors.backgroundWhite),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
         ),
         flexibleSpace: ClipRRect(
-          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+          borderRadius: const BorderRadius.vertical(
+            bottom: Radius.circular(24),
+          ),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -58,10 +67,14 @@ class FamilyMembersScreen extends ConsumerWidget {
             constraints: const BoxConstraints(maxWidth: 800),
             child: profileAsync.when(
               data: (user) {
-                if (user == null) return const Center(child: Text('Data tidak ditemukan'));
-                
+                if (user == null) {
+                  return const Center(
+                    child: Text(AppStrings.extDatatidakditemukan),
+                  );
+                }
+
                 final familyList = user.familyMembers ?? [];
-                
+
                 return ListView(
                   padding: const EdgeInsets.all(24),
                   physics: const BouncingScrollPhysics(),
@@ -102,8 +115,11 @@ class FamilyMembersScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showAddMemberModal(context, ref),
         backgroundColor: AppColors.primary,
-        icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Tambah Anggota', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        icon: const Icon(Icons.add, color: AppColors.backgroundWhite),
+        label: Text(
+          AppStrings.extTambahanggota,
+          style: TextStyle(color: AppColors.backgroundWhite, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }

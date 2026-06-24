@@ -9,10 +9,8 @@ class EmergencyRepository {
     try {
       final response = await dio.post('/emergencies', data: data);
       return Map<String, dynamic>.from(response.data);
-    } on DioException catch (e) {
-      final errorData = e.response?.data;
-      final errorMsg = errorData is Map ? errorData['error'] : e.message;
-      throw Exception(errorMsg ?? 'Failed to submit emergency request');
+    } on DioException {
+      rethrow;
     }
   }
 
@@ -20,10 +18,8 @@ class EmergencyRepository {
     try {
       final response = await dio.get('/emergencies/history');
       return response.data;
-    } on DioException catch (e) {
-      final errorData = e.response?.data;
-      final errorMsg = errorData is Map ? errorData['error'] : e.message;
-      throw Exception(errorMsg ?? 'Failed to get history');
+    } on DioException {
+      rethrow;
     }
   }
 }

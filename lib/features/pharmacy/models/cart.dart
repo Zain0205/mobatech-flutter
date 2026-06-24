@@ -36,14 +36,13 @@ class Cart {
   final List<CartItem> items;
   final double totalPrice;
 
-  Cart({
-    required this.items,
-    required this.totalPrice,
-  });
+  Cart({required this.items, required this.totalPrice});
 
   factory Cart.fromJson(Map<String, dynamic> json) {
     var itemsList = json['items'] as List? ?? [];
-    List<CartItem> cartItems = itemsList.map((i) => CartItem.fromJson(i)).toList();
+    List<CartItem> cartItems = itemsList
+        .map((i) => CartItem.fromJson(i))
+        .toList();
     return Cart(
       items: cartItems,
       totalPrice: (json['total_price'] as num?)?.toDouble() ?? 0.0,

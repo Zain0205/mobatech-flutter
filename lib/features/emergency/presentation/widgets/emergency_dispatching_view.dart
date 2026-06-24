@@ -7,7 +7,8 @@ class EmergencyDispatchingView extends StatefulWidget {
   const EmergencyDispatchingView({super.key});
 
   @override
-  State<EmergencyDispatchingView> createState() => _EmergencyDispatchingViewState();
+  State<EmergencyDispatchingView> createState() =>
+      _EmergencyDispatchingViewState();
 }
 
 class _EmergencyDispatchingViewState extends State<EmergencyDispatchingView>
@@ -22,7 +23,7 @@ class _EmergencyDispatchingViewState extends State<EmergencyDispatchingView>
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     )..repeat(reverse: true);
-    
+
     _pulseAnimation = Tween<double>(begin: 0.8, end: 1.2).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
@@ -64,7 +65,8 @@ class _EmergencyDispatchingViewState extends State<EmergencyDispatchingView>
                         color: AppColors.errorRed.withAlpha(30),
                         border: Border.all(
                           color: AppColors.errorRed.withAlpha(
-                              (100 * _pulseAnimation.value).toInt()),
+                            (100 * _pulseAnimation.value).toInt(),
+                          ),
                           width: 3,
                         ),
                       ),
@@ -81,7 +83,7 @@ class _EmergencyDispatchingViewState extends State<EmergencyDispatchingView>
               const Text(
                 AppStrings.searchingAmbulance,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.backgroundWhite,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
@@ -90,7 +92,7 @@ class _EmergencyDispatchingViewState extends State<EmergencyDispatchingView>
               Text(
                 AppStrings.contactingEmergencyUnit,
                 style: TextStyle(
-                  color: Colors.white.withAlpha(180),
+                  color: AppColors.backgroundWhite.withAlpha(180),
                   fontSize: 14,
                 ),
               ),
@@ -98,9 +100,10 @@ class _EmergencyDispatchingViewState extends State<EmergencyDispatchingView>
               SizedBox(
                 width: 200,
                 child: LinearProgressIndicator(
-                  backgroundColor: Colors.white.withAlpha(25),
+                  backgroundColor: AppColors.backgroundWhite.withAlpha(25),
                   valueColor: const AlwaysStoppedAnimation<Color>(
-                      AppColors.errorRed),
+                    AppColors.errorRed,
+                  ),
                   minHeight: 3,
                 ),
               ),

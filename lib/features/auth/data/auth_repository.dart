@@ -7,35 +7,45 @@ class AuthRepository {
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
-      final response = await _dio.post('/auth/login', data: {
-        'email': email,
-        'password': password,
-      });
+      final response = await _dio.post(
+        '/auth/login',
+        data: {'email': email, 'password': password},
+      );
       return response.data;
-    } on DioException catch (e) {
-      final data = e.response?.data;
-      final errorMsg = data is Map ? data['error'] : e.message;
-      throw Exception(errorMsg ?? 'Login failed');
-    }
+    } on DioException { rethrow; }
   }
 
-  Future<Map<String, dynamic>> register(String fullName, String email, String phone, String password) async {
+  Future<Map<String, dynamic>> register(
+    String fullName,
+    String email,
+    String phone,
+    String password,
+  ) async {
     try {
-      final response = await _dio.post('/auth/register', data: {
-        'full_name': fullName,
-        'email': email,
-        'phone_number': phone,
-        'password': password,
-      });
+      final response = await _dio.post(
+        '/auth/register',
+        data: {
+          'full_name': fullName,
+          'email': email,
+          'phone_number': phone,
+          'password': password,
+        },
+      );
       return response.data;
-    } on DioException catch (e) {
-      final data = e.response?.data;
-      final errorMsg = data is Map ? data['error'] : e.message;
-      throw Exception(errorMsg ?? 'Register failed');
-    }
+    } on DioException { rethrow; }
   }
 
-  Future<Map<String, dynamic>> updateProfile(String fullName, String phone, String? imagePath, {String? bloodType, int? height, int? weight, String? allergies, String? dob, String? gender}) async {
+  Future<Map<String, dynamic>> updateProfile(
+    String fullName,
+    String phone,
+    String? imagePath, {
+    String? bloodType,
+    int? height,
+    int? weight,
+    String? allergies,
+    String? dob,
+    String? gender,
+  }) async {
     try {
       Map<String, dynamic> mapData = {
         'full_name': fullName,
@@ -58,42 +68,28 @@ class AuthRepository {
 
       final response = await _dio.put('/users/profile', data: formData);
       return response.data;
-    } on DioException catch (e) {
-      final data = e.response?.data;
-      final errorMsg = data is Map ? data['error'] : e.message;
-      throw Exception(errorMsg ?? 'Failed to update profile');
-    }
+    } on DioException { rethrow; }
   }
 
   Future<Map<String, dynamic>> getProfile() async {
     try {
       final response = await _dio.get('/auth/me');
       return response.data;
-    } on DioException catch (e) {
-      final data = e.response?.data;
-      final errorMsg = data is Map ? data['error'] : e.message;
-      throw Exception(errorMsg ?? 'Failed to get profile');
-    }
+    } on DioException { rethrow; }
   }
 
-  Future<Map<String, dynamic>> addFamilyMember(Map<String, dynamic> payload) async {
+  Future<Map<String, dynamic>> addFamilyMember(
+    Map<String, dynamic> payload,
+  ) async {
     try {
       final response = await _dio.post('/users/family-members', data: payload);
       return response.data;
-    } on DioException catch (e) {
-      final data = e.response?.data;
-      final errorMsg = data is Map ? data['error'] : e.message;
-      throw Exception(errorMsg ?? 'Failed to add family member');
-    }
+    } on DioException { rethrow; }
   }
 
   Future<void> deleteFamilyMember(int id) async {
     try {
       await _dio.delete('/users/family-members/$id');
-    } on DioException catch (e) {
-      final data = e.response?.data;
-      final errorMsg = data is Map ? data['error'] : e.message;
-      throw Exception(errorMsg ?? 'Failed to delete family member');
-    }
+    } on DioException { rethrow; }
   }
 }
